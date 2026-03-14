@@ -104,6 +104,14 @@ export default function App() {
             Based on the blog post "The Case of Danny Krüger".<br/>
             An interactive comic investigation.
           </p>
+          <a
+            href="https://github.com/voku/LLMComic"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex mt-8 text-sm font-bold uppercase tracking-[0.3em] text-red-500 hover:text-red-400 transition-colors"
+          >
+            Contribute on GitHub
+          </a>
         </div>
       </footer>
     </div>

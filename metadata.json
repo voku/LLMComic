@@ -1,5 +1,5 @@
 {
   "name": "The Case of Danny Krüger",
-  "description": "An interactive comic-style investigation into AI coding, based on a blog post.",
+  "description": "A noir interactive comic about AI-assisted software development and plausible correctness.",
   "requestFramePermissions": []
 }
