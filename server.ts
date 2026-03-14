@@ -46,7 +46,7 @@ async function startServer() {
     }
 
     try {
-      const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+      const apiKey = process.env.API_KEY;
       if (!apiKey || apiKey === "undefined") {
         console.warn("No API key found, falling back to picsum.photos");
         const fallbackUrl = `https://picsum.photos/seed/${id}/1920/1080?grayscale`;
@@ -84,7 +84,7 @@ async function startServer() {
         res.status(500).json({ error: "No image generated" });
       }
     } catch (e: any) {
-      console.error(`Error generating ${id} with Gemini, falling back to picsum:`, e.message);
+      console.error(`Error generating ${id} with the configured provider, falling back to picsum:`, e.message);
       try {
         const fallbackUrl = `https://picsum.photos/seed/${id}/1920/1080?grayscale`;
         const imgRes = await fetch(fallbackUrl);

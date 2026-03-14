@@ -1,1 +1,1 @@
-console.log(process.env.GEMINI_API_KEY ? 'exists' : 'missing');
+console.log(process.env.API_KEY ? 'exists' : 'missing');

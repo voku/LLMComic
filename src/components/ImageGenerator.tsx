@@ -15,7 +15,7 @@ export function ImageGenerator({ panelId, prompt, fallbackSeed, className, style
   // Load cached image on mount
   useEffect(() => {
     // Try to load the generated image from the server
-    const serverPath = `/generated/${panelId}.jpg`;
+    const serverPath = `${import.meta.env.BASE_URL}generated/${panelId}.jpg`;
     setImageUrl(serverPath);
     setImageError(false);
   }, [panelId]);
