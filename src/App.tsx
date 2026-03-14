@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 import { ComicStrip } from './components/ComicStrip';
 import { PointAndClickScene } from './components/PointAndClickScene';
 import { ImageGenerator } from './components/ImageGenerator';
-import { panels, characterConfig, ComicPanel as ComicPanelType } from './data';
+import { panels, ComicPanel as ComicPanelType } from './data';
 
 // ---------------------------------------------------------------------------
 // Helper: group the flat panels array into alternating comic strips and
@@ -68,9 +68,8 @@ export default function App() {
             }}
           >
             <ImageGenerator
-              panelId="main-intro-bg"
-              prompt={`Scene: A dark, rainy cyberpunk city skyline at night. Noir comic style, high contrast ink. Style: ${characterConfig.style}`}
-              fallbackSeed="noir-city"
+              imageId="main-intro-bg"
+              alt="Rain-soaked noir city skyline at night"
               className="w-full h-full object-cover opacity-60"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent pointer-events-none" />

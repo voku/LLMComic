@@ -21,7 +21,7 @@ export interface ComicPanel {
   hotspots?: Hotspot[];
 }
 
-// Hidden JSON character definition used for consistent image generation
+// Art-direction reference used to keep the shipped comic imagery stylistically consistent
 export const characterConfig = {
   name: "Danny Krüger",
   appearance: "A weary, cynical software engineer in his 30s. Messy dark hair, slight stubble, wearing a dark trench coat over a faded tech startup t-shirt. He has a glowing, subtle cybernetic implant around his left eye. He looks exhausted but sharp.",
