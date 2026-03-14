@@ -80,14 +80,29 @@ This repository includes a GitHub Actions workflow that automatically deploys th
 - Workflow file: `.github/workflows/deploy-pages.yml`
 - Published URL: `https://voku.github.io/LLMComic/`
 
+## Generating panel images
+
+Pre-generated images are committed in `public/generated/`. To regenerate (or add new ones), start the dev server then run the auto-generate script:
+
+```bash
+npm run dev          # terminal 1 — starts local server on port 3000
+npx tsx scripts/auto-generate.ts   # terminal 2 — generates all missing images
+```
+
+The script fetches the generation plan from `/api/generation-plan`, then calls `/api/generate-single` for each panel. Images are saved to `public/generated/` and cached — already-existing files are skipped.
+
+Set `API_KEY` in `.env.local` to use Google Gemini image generation; without it the server falls back to grayscale placeholders from picsum.photos.
+
 ## Project structure
 
-- `src/App.tsx` — top-level story layout and footer
+- `src/App.tsx` — top-level story layout, groups panels into comic strips and interactive scenes
 - `src/data.ts` — comic content, panel definitions, hotspots, and prompts
-- `src/components/ComicPanel.tsx` — scroll-driven comic panel renderer
-- `src/components/PointAndClickScene.tsx` — interactive investigation scenes
+- `src/components/ComicStrip.tsx` — groups narrative panels in a 2-column comic-book grid with noir gutters
+- `src/components/ComicPanel.tsx` — individual panel with background image, title banner, and caption boxes
+- `src/components/PointAndClickScene.tsx` — interactive investigation scenes (point-and-click gameplay)
 - `src/components/ImageGenerator.tsx` — image loading for generated panel assets
 - `server.ts` — local Express server for dev mode and optional image-generation endpoints
+- `scripts/auto-generate.ts` — CLI helper to auto-generate all panel images via the dev server
 - `public/generated/` — pre-generated comic artwork used by the static deployment
 
 ## Helper prompt: Key Files Detector
