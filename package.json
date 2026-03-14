@@ -7,13 +7,13 @@
     "dev": "tsx server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --target=node18 --outfile=dist/server.cjs --external:express --external:vite",
     "build:web": "vite build",
+    "build:pages": "BASE_PATH=/LLMComic/ npm run build:web",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "start": "node dist/server.cjs"
   },
   "dependencies": {
-    "@google/genai": "^1.29.0",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
     "dotenv": "^17.2.3",

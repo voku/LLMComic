@@ -6,6 +6,10 @@
 
 An interactive noir comic about AI-assisted software development, built with React, TypeScript, Vite, Tailwind CSS, and a small Express server that serves the shipped comic-image manifest in development.
 
+- **Live site:** https://voku.github.io/LLMComic/
+- **Repository:** https://github.com/voku/LLMComic
+- **Runtime model integrations:** none required for the shipped experience — the comic uses committed assets and does not depend on Gemini, Google AI Studio, or other provider signups to run.
+
 ## Production overview
 
 - **Frontend:** React 19 + Vite
@@ -53,20 +57,21 @@ The app will be available at `http://localhost:3000`.
 
 ## Build and verification
 
-Run the existing checks:
+Run the existing checks before opening a pull request or publishing a build:
 
 ```bash
 npm run lint
 npm run build
 ```
 
-To create the static site bundle only:
+Common build targets:
 
 ```bash
-npm run build:web
+npm run build:web    # static Vite site in dist/
+npm run build:pages  # GitHub Pages build with /LLMComic/ base path
 ```
 
-To preview the static Vite build locally:
+To preview the static Vite build locally after a build:
 
 ```bash
 npm run preview
@@ -77,7 +82,10 @@ npm run preview
 This repository includes a GitHub Actions workflow that automatically deploys the Vite build to GitHub Pages on pushes to `main`.
 
 - Workflow file: `.github/workflows/deploy-pages.yml`
+- Build command: `npm run build:pages`
 - Published URL: `https://voku.github.io/LLMComic/`
+
+The Pages workflow uploads the generated `dist/` directory as the deployment artifact, so local verification should use the same command when you want to mirror production exactly.
 
 ## Pre-generated panel images
 
@@ -118,7 +126,7 @@ For each recommended file, explain:
 2. What part of the task it affects
 3. Whether it is safe to edit directly or only useful for context
 
-Prefer the minimal set of files needed to make a correct change.
+Prefer the minimal set of files needed to make a correct change, and call out any deployment, metadata, or generated-asset files that must stay in sync.
 ```
 
 ## Contributing

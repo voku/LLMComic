@@ -152,6 +152,7 @@ export default function App() {
               href="https://github.com/voku/LLMComic"
               target="_blank"
               rel="noreferrer"
+              aria-label="Contribute to LLMComic on GitHub"
               className="text-red-500 hover:text-red-400 underline underline-offset-4"
             >
               Contribute on GitHub
