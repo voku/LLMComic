@@ -1,47 +1,86 @@
 import { motion, useScroll, useSpring, useTransform } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
-import { ComicPanel } from './components/ComicPanel';
+import { ComicStrip } from './components/ComicStrip';
 import { PointAndClickScene } from './components/PointAndClickScene';
 import { ImageGenerator } from './components/ImageGenerator';
-import { panels, characterConfig } from './data';
+import { panels, characterConfig, ComicPanel as ComicPanelType } from './data';
+
+// ---------------------------------------------------------------------------
+// Helper: group the flat panels array into alternating comic strips and
+// interactive scenes so the grid renderer knows what to render.
+// ---------------------------------------------------------------------------
+type Section =
+  | { type: 'strip'; panels: ComicPanelType[] }
+  | { type: 'interactive'; panel: ComicPanelType };
+
+function buildSections(allPanels: ComicPanelType[]): Section[] {
+  const sections: Section[] = [];
+  let strip: ComicPanelType[] = [];
+
+  for (const panel of allPanels) {
+    if (panel.type === 'interactive') {
+      if (strip.length > 0) {
+        sections.push({ type: 'strip', panels: strip });
+        strip = [];
+      }
+      sections.push({ type: 'interactive', panel });
+    } else {
+      strip.push(panel);
+    }
+  }
+
+  if (strip.length > 0) {
+    sections.push({ type: 'strip', panels: strip });
+  }
+
+  return sections;
+}
 
 export default function App() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
+
+  const sections = buildSections(panels);
+
+  // Running count of panels so each ComicPanel gets a unique stagger index
+  let panelCount = 0;
 
   return (
     <div className="bg-zinc-950 min-h-screen text-zinc-100 font-sans selection:bg-red-700 selection:text-white">
-      {/* Progress Bar */}
+      {/* Reading-progress bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-red-700 origin-left z-50"
         style={{ scaleX }}
       />
 
-      {/* Intro Screen */}
-      <header className="relative h-[120vh] flex flex-col items-center justify-start pt-[30vh] overflow-hidden border-b-8 border-zinc-900">
-        <div className="absolute inset-0 z-0 clip-path-panel">
-          <motion.div 
+      {/* ── Intro cover ─────────────────────────────────────────────────── */}
+      <header className="relative h-[120vh] flex flex-col items-center justify-start pt-[30vh] overflow-hidden border-b-8 border-zinc-950">
+        <div className="absolute inset-0 z-0">
+          <motion.div
             className="sticky top-0 h-screen w-full overflow-hidden"
-            style={{ 
+            style={{
               opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]),
-              scale: useTransform(scrollYProgress, [0, 0.1], [1, 1.1])
+              scale: useTransform(scrollYProgress, [0, 0.1], [1, 1.1]),
             }}
           >
-            <ImageGenerator 
+            <ImageGenerator
               panelId="main-intro-bg"
               prompt={`Scene: A dark, rainy cyberpunk city skyline at night. Noir comic style, high contrast ink. Style: ${characterConfig.style}`}
               fallbackSeed="noir-city"
               className="w-full h-full object-cover opacity-60"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent pointer-events-none" />
-            <div className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none" style={{
-              backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)',
-              backgroundSize: '4px 4px'
-            }} />
+            <div
+              className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)',
+                backgroundSize: '4px 4px',
+              }}
+            />
           </motion.div>
         </div>
 
@@ -70,7 +109,7 @@ export default function App() {
           </motion.div>
         </div>
 
-        <motion.div 
+        <motion.div
           className="absolute bottom-32 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-500 z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -80,29 +119,36 @@ export default function App() {
           <span className="text-sm uppercase tracking-widest font-bold">Investigate</span>
           <motion.div
             animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
           >
             <ChevronDown size={32} className="text-red-600" />
           </motion.div>
         </motion.div>
       </header>
 
-      {/* Comic Panels & Interactive Scenes */}
+      {/* ── Comic pages & interactive scenes ────────────────────────────── */}
       <main className="relative z-10">
-        {panels.map((panel, index) => (
-          panel.type === 'interactive' 
-            ? <PointAndClickScene key={panel.id} panel={panel} />
-            : <ComicPanel key={panel.id} panel={panel} index={index} />
-        ))}
+        {sections.map((section) => {
+          if (section.type === 'interactive') {
+            return <PointAndClickScene key={section.panel.id} panel={section.panel} />;
+          }
+
+          const start = panelCount;
+          panelCount += section.panels.length;
+          const stripKey = section.panels[0]?.id ?? `strip-${start}`;
+          return <ComicStrip key={stripKey} panels={section.panels} startIndex={start} />;
+        })}
       </main>
 
-      {/* Footer */}
+      {/* ── Footer ──────────────────────────────────────────────────────── */}
       <footer className="bg-zinc-950 py-24 text-center border-t border-zinc-900 relative z-10">
         <div className="max-w-2xl mx-auto px-6">
-          <h2 className="font-serif text-3xl font-bold text-white mb-6 uppercase tracking-wider">Case Closed</h2>
+          <h2 className="font-serif text-3xl font-bold text-white mb-6 uppercase tracking-wider">
+            Case Closed
+          </h2>
           <p className="text-zinc-400 text-lg">
-            Based on the blog post "The Case of Danny Krüger".<br/>
-            An interactive comic investigation.<br/>
+            Based on the blog post "The Case of Danny Krüger".<br />
+            An interactive comic investigation.<br />
             <a
               href="https://github.com/voku/LLMComic"
               target="_blank"
