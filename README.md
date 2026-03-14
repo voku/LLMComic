@@ -4,7 +4,7 @@
 
 # LLMComic
 
-An interactive noir comic about AI-assisted software development, built with React, TypeScript, Vite, Tailwind CSS, and a small Express server for optional image generation workflows.
+An interactive noir comic about AI-assisted software development, built with React, TypeScript, Vite, Tailwind CSS, and a small Express server that serves the shipped comic-image manifest in development.
 
 ## Production overview
 
@@ -12,7 +12,7 @@ An interactive noir comic about AI-assisted software development, built with Rea
 - **Styling:** Tailwind CSS 4
 - **Server:** Express + TSX during development
 - **Static deployment:** GitHub Pages via Vite build output
-- **Dynamic/local deployment:** Node server for `/api/*` image-generation endpoints
+- **Dynamic/local deployment:** Node server for `/api/*` image-manifest endpoints
 
 ## Getting started
 
@@ -37,10 +37,9 @@ cp .env.example .env.local
 
 Available variables:
 
-- `API_KEY` — optional provider API key used by the local image-generation scripts/server
 - `APP_URL` — optional application base URL for deployed environments
 
-> The static GitHub Pages site uses the pre-generated assets in `public/generated` and does not require a server-side API.
+> The comic uses the pre-generated assets in `public/generated` and does not require a provider API key.
 
 ### Run locally
 
@@ -80,29 +79,28 @@ This repository includes a GitHub Actions workflow that automatically deploys th
 - Workflow file: `.github/workflows/deploy-pages.yml`
 - Published URL: `https://voku.github.io/LLMComic/`
 
-## Generating panel images
+## Pre-generated panel images
 
-Pre-generated images are committed in `public/generated/`. To regenerate (or add new ones), start the dev server then run the auto-generate script:
+Pre-generated images are committed in `public/generated/`. To verify that the local manifest and the shipped files still match, start the dev server then run the manifest check:
 
 ```bash
 npm run dev          # terminal 1 — starts local server on port 3000
-npx tsx scripts/auto-generate.ts   # terminal 2 — generates all missing images
+npx tsx scripts/auto-generate.ts   # terminal 2 — verifies every shipped comic image
 ```
 
-The script fetches the generation plan from `/api/generation-plan`, then calls `/api/generate-single` for each panel. Images are saved to `public/generated/` and cached — already-existing files are skipped.
-
-Set `API_KEY` in `.env.local` to use Google Gemini image generation; without it the server falls back to grayscale placeholders from picsum.photos.
+The script fetches the image manifest from `/api/generation-plan`, then calls `/api/generate-single` for each image ID to confirm the asset path that the web app uses.
 
 ## Project structure
 
 - `src/App.tsx` — top-level story layout, groups panels into comic strips and interactive scenes
-- `src/data.ts` — comic content, panel definitions, hotspots, and prompts
+- `src/data.ts` — comic content, panel definitions, hotspots, and art-direction copy
+- `src/generatedImages.ts` — explicit manifest of the shipped comic artwork
 - `src/components/ComicStrip.tsx` — groups narrative panels in a 2-column comic-book grid with noir gutters
 - `src/components/ComicPanel.tsx` — individual panel with background image, title banner, and caption boxes
 - `src/components/PointAndClickScene.tsx` — interactive investigation scenes (point-and-click gameplay)
-- `src/components/ImageGenerator.tsx` — image loading for generated panel assets
-- `server.ts` — local Express server for dev mode and optional image-generation endpoints
-- `scripts/auto-generate.ts` — CLI helper to auto-generate all panel images via the dev server
+- `src/components/ImageGenerator.tsx` — image loading for the shipped panel assets
+- `server.ts` — local Express server for dev mode and image-manifest endpoints
+- `scripts/auto-generate.ts` — CLI helper to verify the shipped image manifest via the dev server
 - `public/generated/` — pre-generated comic artwork used by the static deployment
 
 ## Helper prompt: Key Files Detector

@@ -38,9 +38,8 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
           style={{ scale: imageScale, y: imageY }}
         >
           <ImageGenerator
-            panelId={panel.id}
-            prompt={panel.imagePrompt || ''}
-            fallbackSeed={panel.imageSeed}
+            imageId={panel.id}
+            alt={panel.imageAlt}
             className="w-full h-full object-cover"
           />
         </motion.div>

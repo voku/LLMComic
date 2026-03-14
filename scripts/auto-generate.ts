@@ -1,5 +1,5 @@
 async function run() {
-  console.log("Fetching generation plan...");
+  console.log("Fetching shipped image manifest...");
   try {
     const res = await fetch('http://localhost:3000/api/generation-plan');
     if (!res.ok) {
@@ -7,27 +7,27 @@ async function run() {
     }
     const plan = await res.json();
     
-    console.log(`Found ${plan.length} images to generate.`);
+    console.log(`Found ${plan.length} pre-generated comic images.`);
     for (let i = 0; i < plan.length; i++) {
       const item = plan[i];
-      console.log(`[${i+1}/${plan.length}] Generating ${item.id}...`);
+      console.log(`[${i + 1}/${plan.length}] Verifying ${item.id}...`);
       
       const genRes = await fetch('http://localhost:3000/api/generate-single', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(item)
+        body: JSON.stringify({ id: item.id })
       });
       
       const genData = await genRes.json();
       if (genData.success) {
-        console.log(`  -> Success ${genData.cached ? '(Cached)' : ''}`);
+        console.log(`  -> Ready at ${genData.path}`);
       } else {
         console.error(`  -> Failed:`, genData.error);
       }
     }
-    console.log("All done!");
+    console.log("All shipped comic images are accounted for.");
   } catch (err) {
-    console.error("Error during generation:", err);
+    console.error("Error while verifying the image manifest:", err);
   }
 }
 

@@ -57,9 +57,8 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
         style={{ opacity: bgOpacity, y: bgY }}
       >
         <ImageGenerator 
-          panelId={`${panel.id}-bg`}
-          prompt={panel.imagePrompt ? `${panel.imagePrompt} (Blurred background texture version)` : ''}
-          fallbackSeed={`${panel.imageSeed}-bg`}
+          imageId={`${panel.id}-bg`}
+          alt={`${panel.imageAlt} background texture`}
           className="w-full h-full object-cover blur-sm"
         />
         <div className="absolute inset-0 bg-zinc-950/80 mix-blend-multiply" />
@@ -94,9 +93,8 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
         <div className="relative w-full aspect-video bg-black overflow-hidden cursor-crosshair group">
           <div className="w-full h-full opacity-50 group-hover:opacity-60 transition-opacity duration-500">
             <ImageGenerator 
-              panelId={panel.id}
-              prompt={panel.imagePrompt || ''}
-              fallbackSeed={panel.imageSeed}
+              imageId={panel.id}
+              alt={panel.imageAlt}
               className="w-full h-full object-cover"
             />
           </div>
