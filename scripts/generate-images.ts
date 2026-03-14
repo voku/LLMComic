@@ -6,9 +6,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const apiKey = process.env.GEMINI_API_KEY;
+const apiKey = process.env.API_KEY;
 if (!apiKey) {
-  console.error("GEMINI_API_KEY is not set.");
+  console.error("API_KEY is not set.");
   process.exit(1);
 }
 

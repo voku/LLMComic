@@ -102,7 +102,15 @@ export default function App() {
           <h2 className="font-serif text-3xl font-bold text-white mb-6 uppercase tracking-wider">Case Closed</h2>
           <p className="text-zinc-400 text-lg">
             Based on the blog post "The Case of Danny Krüger".<br/>
-            An interactive comic investigation.
+            An interactive comic investigation.<br/>
+            <a
+              href="https://github.com/voku/LLMComic"
+              target="_blank"
+              rel="noreferrer"
+              className="text-red-500 hover:text-red-400 underline underline-offset-4"
+            >
+              Contribute on GitHub
+            </a>
           </p>
         </div>
       </footer>
