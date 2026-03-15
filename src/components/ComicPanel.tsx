@@ -10,6 +10,13 @@ interface Props {
   featured?: boolean;
 }
 
+const DEFAULT_MAX_CHARS_PER_LINE = 26;
+const BASE_IMAGE_HEIGHT = 220;
+const BASE_LINE_COUNT = 2;
+const LINE_HEIGHT_INCREMENT = 44;
+const TEXT_START_Y = 108;
+const TEXT_LINE_SPACING = 42;
+
 function escapeSvgText(value: string) {
   return value
     .replace(/&/g, '&amp;')
@@ -19,7 +26,7 @@ function escapeSvgText(value: string) {
     .replace(/'/g, '&#39;');
 }
 
-function wrapComicText(text: string, maxCharsPerLine = 26) {
+function wrapComicText(text: string, maxCharsPerLine = DEFAULT_MAX_CHARS_PER_LINE) {
   const words = text.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
   let currentLine = '';
@@ -43,33 +50,41 @@ function wrapComicText(text: string, maxCharsPerLine = 26) {
 
 function createNarrativeImage(panel: ComicPanelType, text: string, blockIndex: number) {
   const lines = wrapComicText(text);
-  const imageHeight = 220 + Math.max(0, lines.length - 2) * 44;
+  const imageHeight = BASE_IMAGE_HEIGHT + Math.max(0, lines.length - BASE_LINE_COUNT) * LINE_HEIGHT_INCREMENT;
   const context = [panel.title, panel.imageAlt].filter(Boolean).join(' • ');
+  const description = `${context ? `${context}. ` : ''}${text}`;
+  const footerText = context || 'Comic panel narration';
+  const idPrefix = `${panel.id}-${blockIndex}`;
+  const gradientId = `${idPrefix}-bg`;
+  const patternId = `${idPrefix}-dots`;
+  const titleId = `${idPrefix}-title`;
+  const descriptionId = `${idPrefix}-desc`;
+  const cardTitle = context ? `${context} — ${text}` : text;
   const lineMarkup = lines
     .map((line, lineIndex) => {
-      const y = 108 + lineIndex * 42;
+      const y = TEXT_START_Y + lineIndex * TEXT_LINE_SPACING;
       return `<tspan x="72" y="${y}">${escapeSvgText(line)}</tspan>`;
     })
     .join('');
 
   const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 ${imageHeight}" role="img" aria-labelledby="title desc">
-      <title id="title">${escapeSvgText(`Narrative card ${blockIndex + 1}`)}</title>
-      <desc id="desc">${escapeSvgText(`${context}. ${text}`)}</desc>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 ${imageHeight}" role="img" aria-labelledby="${titleId} ${descriptionId}">
+      <title id="${titleId}">${escapeSvgText(cardTitle)}</title>
+      <desc id="${descriptionId}">${escapeSvgText(description)}</desc>
       <defs>
-        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="${gradientId}" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#fef08a" />
           <stop offset="55%" stop-color="#fde047" />
           <stop offset="100%" stop-color="#f97316" />
         </linearGradient>
-        <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
+        <pattern id="${patternId}" width="18" height="18" patternUnits="userSpaceOnUse">
           <circle cx="3" cy="3" r="2" fill="#111827" fill-opacity="0.18" />
         </pattern>
       </defs>
 
       <rect width="1200" height="${imageHeight}" fill="#09090b" rx="20" />
-      <rect x="18" y="18" width="1164" height="${imageHeight - 36}" rx="14" fill="url(#bg)" />
-      <rect x="18" y="18" width="1164" height="${imageHeight - 36}" rx="14" fill="url(#dots)" />
+      <rect x="18" y="18" width="1164" height="${imageHeight - 36}" rx="14" fill="url(#${gradientId})" />
+      <rect x="18" y="18" width="1164" height="${imageHeight - 36}" rx="14" fill="url(#${patternId})" />
       <rect x="44" y="40" width="250" height="54" rx="6" fill="#dc2626" stroke="#09090b" stroke-width="8" />
       <text x="72" y="76" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" letter-spacing="3">
         NARRATION
@@ -79,7 +94,7 @@ function createNarrativeImage(panel: ComicPanelType, text: string, blockIndex: n
       </text>
       <rect x="44" y="${imageHeight - 62}" width="1112" height="10" rx="5" fill="#111827" fill-opacity="0.24" />
       <text x="72" y="${imageHeight - 82}" fill="#111827" fill-opacity="0.72" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">
-        ${escapeSvgText(context || panel.id)}
+        ${escapeSvgText(footerText)}
       </text>
     </svg>
   `;
