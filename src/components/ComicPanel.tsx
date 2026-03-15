@@ -23,7 +23,7 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
   return (
     <motion.div
       ref={containerRef}
-      className={`relative overflow-hidden bg-zinc-900 ${featured ? 'md:col-span-2' : ''}`}
+      className="relative overflow-hidden bg-zinc-900"
       style={{ minHeight: featured ? '480px' : '400px' }}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
@@ -77,7 +77,8 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
           </motion.div>
         )}
 
-        {/* Spacer pushes narration boxes to the bottom */}
+        {/* Spacer: flex-1 fills remaining space to push narration to the
+            bottom of the panel; min-h-8 ensures art is always partially visible */}
         <div className="flex-1 min-h-8" />
 
         {/* Narration boxes — classic comic caption boxes */}

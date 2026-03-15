@@ -90,7 +90,7 @@ export default function App() {
             transition={{ duration: 1, delay: 0.2 }}
             style={{ y: useTransform(scrollYProgress, [0, 0.1], [0, -100]) }}
           >
-            <h1 className="font-[--font-comic-title] text-6xl md:text-8xl lg:text-9xl tracking-wide text-white mb-6 drop-shadow-[6px_6px_0_rgba(0,0,0,1)]" style={{ textShadow: '4px 4px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' }}>
+            <h1 className="font-[--font-comic-title] text-6xl md:text-8xl lg:text-9xl tracking-wide text-white mb-6" style={{ textShadow: '4px 4px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' }}>
               The Case of <br />
               <span className="text-red-500">Danny Krüger</span>
             </h1>
