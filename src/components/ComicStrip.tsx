@@ -14,7 +14,9 @@ interface Props {
  * spans both columns.
  */
 export function ComicStrip({ panels, startIndex }: Props) {
-  // Split panels: first panel is "hero" (full-width), rest go in grid
+  // When a strip has 3+ panels the first one becomes a full-width "hero"
+  // to break up the uniform grid. With only 1-2 panels everything goes
+  // into the grid so the layout doesn't look unbalanced.
   const hero = panels.length > 2 ? panels[0] : null;
   const gridPanels = hero ? panels.slice(1) : panels;
 

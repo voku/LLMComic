@@ -43,16 +43,13 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
     const response = hotspot.interactions[activeVerb];
     if (response) {
       setMessage(response);
-      setDiscovered(prev => new Set(prev).add(`${hotspot.id}-${activeVerb}`));
+      setDiscovered(prev => new Set(prev).add(hotspot.id));
     } else {
       setMessage(`I can't ${activeVerb.toLowerCase()} that.`);
     }
   };
 
-  // Count unique hotspot discoveries (any verb counts)
-  const discoveredHotspots = new Set(
-    Array.from(discovered).map(d => d.split('-').slice(0, -1).join('-'))
-  );
+  const discoveredCount = discovered.size;
 
   return (
     <div ref={containerRef} className="w-full bg-zinc-950 flex flex-col items-center py-12 md:py-20 px-4 md:px-12 relative z-20 overflow-hidden">
@@ -92,12 +89,12 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
               <div
                 key={i}
                 className={`w-3 h-3 rounded-full border-2 border-zinc-600 transition-colors duration-500 ${
-                  i < discoveredHotspots.size ? 'bg-yellow-400 border-yellow-400' : 'bg-zinc-800'
+                  i < discoveredCount ? 'bg-yellow-400 border-yellow-400' : 'bg-zinc-800'
                 }`}
               />
             ))}
             <span className="text-zinc-500 text-xs font-[--font-comic] ml-1">
-              {discoveredHotspots.size}/{totalHotspots} clues found
+              {discoveredCount}/{totalHotspots} clues found
             </span>
           </div>
         </div>
@@ -126,7 +123,7 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
 
           {/* Hotspots */}
           {panel.hotspots?.map(hotspot => {
-            const isDiscovered = discoveredHotspots.has(hotspot.id);
+            const isDiscovered = discovered.has(hotspot.id);
             return (
               <div
                 key={hotspot.id}
