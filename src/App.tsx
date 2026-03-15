@@ -1,7 +1,8 @@
 import { ComicStrip } from './components/ComicStrip';
 import { PointAndClickScene } from './components/PointAndClickScene';
 import { ImageGenerator } from './components/ImageGenerator';
-import { panels, ComicPanel as ComicPanelType } from './data';
+import { ComicPageView } from './components/ComicPageView';
+import { panels, comicPages, ComicPanel as ComicPanelType } from './data';
 
 // ---------------------------------------------------------------------------
 // Helper: group the flat panels array into alternating comic strips and
@@ -35,7 +36,8 @@ function buildSections(allPanels: ComicPanelType[]): Section[] {
 }
 
 export default function App() {
-  const sections = buildSections(panels);
+  const useComicPages = comicPages.length > 0;
+  const sections = useComicPages ? [] : buildSections(panels);
   let panelCount = 0;
 
   return (
@@ -73,16 +75,26 @@ export default function App() {
       </header>
 
       <main className="relative z-10 py-6 md:py-8">
-        {sections.map((section) => {
-          if (section.type === 'interactive') {
-            return <PointAndClickScene key={section.panel.id} panel={section.panel} />;
-          }
+        {useComicPages ? (
+          /* Single-column comic pages backed by uploaded PNG artwork */
+          <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 md:gap-8 md:px-6">
+            {comicPages.map((page, i) => (
+              <ComicPageView key={page.id} page={page} pageNumber={i + 1} />
+            ))}
+          </div>
+        ) : (
+          /* Fallback: multi-column strip layout (used when no PNG pages exist) */
+          sections.map((section) => {
+            if (section.type === 'interactive') {
+              return <PointAndClickScene key={section.panel.id} panel={section.panel} />;
+            }
 
-          const start = panelCount;
-          panelCount += section.panels.length;
-          const stripKey = section.panels[0]?.id ?? `strip-${start}`;
-          return <ComicStrip key={stripKey} panels={section.panels} startIndex={start} />;
-        })}
+            const start = panelCount;
+            panelCount += section.panels.length;
+            const stripKey = section.panels[0]?.id ?? `strip-${start}`;
+            return <ComicStrip key={stripKey} panels={section.panels} startIndex={start} />;
+          })
+        )}
       </main>
 
       <footer className="relative z-10 border-t-4 border-zinc-900 bg-zinc-950 py-16 text-center">

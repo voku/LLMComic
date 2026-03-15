@@ -21,6 +21,31 @@ export interface ComicPanel {
   hotspots?: Hotspot[];
 }
 
+/**
+ * A single full-width comic page backed by one of the uploaded PNG images.
+ * `panels` are the story panels whose narrative belongs on this page.
+ */
+export interface ComicPage {
+  /** ID that maps to a 'comic-page-N' key in generatedImages */
+  id: string;
+  /** Accessible alt text for the page image */
+  imageAlt: string;
+  /** Panels whose story content is shown on this page */
+  panels: ComicPanel[];
+  /** Natural width of the source image in pixels (used for viewBox scaling) */
+  imageWidth: number;
+  /** Natural height of the source image in pixels (used for viewBox scaling) */
+  imageHeight: number;
+}
+
+/**
+ * Maps the 8 uploaded comic-style PNG images to story panels.
+ * The images are displayed in a single column; interactive panels carry
+ * scaling SVG image-map hotspots so click targets stay proportional at
+ * any viewport width.
+ */
+export const comicPages: ComicPage[] = [];
+
 // Art-direction reference used to keep the shipped comic imagery stylistically consistent
 export const characterConfig = {
   name: "Danny Krüger",
@@ -359,3 +384,68 @@ export const panels: ComicPanel[] = [
     imageAlt: "A detective's desk with code printouts, a red pen, and a coffee mug"
   }
 ];
+
+// Populate comicPages after panels is defined so we can reference panels by index.
+(function populateComicPages() {
+  const p = panels;
+  // 8 uploaded PNG images mapped to story narrative groups:
+  // Page 1 (1773597875498): intro + symptoms              - "The Crime"
+  // Page 2 (1773597878808): new-engineer + the-tools      - "The Engineer"
+  // Page 3 (1773597883925): cheap-part + the-catch        - "The Cheap Part"
+  // Page 4 (1773597887326): first-clue                    - "The First Clue" (interactive)
+  // Page 5 (1773597890190): workflow + pattern-mirrors    - "The Pattern"
+  // Page 6 (1773597896129): happy-path + eighty-eighty + slow-decay  - "The Decay"
+  // Page 7 (1773597896891): missing-knowledge + quiet-witness + danny-kruger-effect  - "The Investigation"
+  // Page 8 (1773597898900): reality-arrives + real-shift + closing-case  - "The Truth"
+  const byId = Object.fromEntries(p.map(panel => [panel.id, panel]));
+  comicPages.push(
+    {
+      id: 'comic-page-1',
+      imageAlt: 'Comic page 1 – The Crime: a corrupted system and strange search results',
+      imageWidth: 1408, imageHeight: 768,
+      panels: [byId['intro'], byId['symptoms']],
+    },
+    {
+      id: 'comic-page-2',
+      imageAlt: 'Comic page 2 – The Engineer: Danny ships entire modules with AI assistance',
+      imageWidth: 1408, imageHeight: 768,
+      panels: [byId['new-engineer'], byId['the-tools']],
+    },
+    {
+      id: 'comic-page-3',
+      imageAlt: 'Comic page 3 – The Cheap Part: coding becomes cheap but remarkable software stays rare',
+      imageWidth: 1408, imageHeight: 768,
+      panels: [byId['cheap-part'], byId['the-catch']],
+    },
+    {
+      id: 'comic-page-4',
+      imageAlt: 'Comic page 4 – The First Clue: investigate the cracked search index',
+      imageWidth: 1408, imageHeight: 768,
+      panels: [byId['first-clue']],
+    },
+    {
+      id: 'comic-page-5',
+      imageAlt: 'Comic page 5 – The Pattern: LLMs mirror existing patterns, not your architecture',
+      imageWidth: 1408, imageHeight: 768,
+      panels: [byId['workflow'], byId['pattern-mirrors']],
+    },
+    {
+      id: 'comic-page-6',
+      imageAlt: 'Comic page 6 – The Decay: happy path, 80/80 effect, and context rot',
+      imageWidth: 1408, imageHeight: 768,
+      panels: [byId['happy-path'], byId['eighty-eighty'], byId['slow-decay']],
+    },
+    {
+      id: 'comic-page-7',
+      imageAlt: 'Comic page 7 – The Investigation: missing knowledge, quiet witness, Danny Krüger effect',
+      imageWidth: 1408, imageHeight: 768,
+      panels: [byId['missing-knowledge'], byId['quiet-witness'], byId['danny-kruger-effect']],
+    },
+    {
+      id: 'comic-page-8',
+      imageAlt: 'Comic page 8 – The Truth: reality arrives, the real shift, closing the case',
+      imageWidth: 1376, imageHeight: 768,
+      panels: [byId['reality-arrives'], byId['real-shift'], byId['closing-case']],
+    },
+  );
+}());
