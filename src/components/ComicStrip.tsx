@@ -8,13 +8,12 @@ interface Props {
 
 export function ComicStrip({ panels, startIndex }: Props) {
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-4 md:px-6 md:py-6">
+    <section className="mx-auto grid max-w-7xl gap-4 px-4 py-4 md:grid-cols-2 md:gap-5 md:px-6 md:py-6">
       {panels.map((panel, i) => (
         <ComicPanel
           key={panel.id}
           panel={panel}
           index={startIndex + i}
-          featured={i === 0}
         />
       ))}
     </section>
