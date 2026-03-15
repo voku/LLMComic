@@ -40,37 +40,34 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-red-700 selection:text-white">
-      <header className="border-b-4 border-zinc-900 bg-zinc-950">
-        <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 md:px-6 md:py-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:items-center">
-          <div className="order-2 space-y-5 lg:order-1">
-            <p className="font-[--font-comic-title] text-lg tracking-[0.3em] text-red-500">
-              READ-ONLY COMIC EDITION
-            </p>
-            <h1
-              className="font-[--font-comic-title] text-5xl leading-none text-white md:text-7xl lg:text-8xl"
-              style={{ textShadow: '4px 4px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' }}
-            >
-              The Case of
-              <br />
-              <span className="text-red-500">Danny Krüger</span>
-            </h1>
-            <p className="max-w-2xl border-l-8 border-red-600 bg-zinc-900/80 px-5 py-4 font-[--font-comic] text-lg font-bold leading-relaxed text-zinc-100 md:text-xl">
-              A static, image-first comic about what happens when generated code looks right enough to be believed.
-            </p>
-            <p className="max-w-2xl font-[--font-comic] text-base leading-relaxed text-zinc-300 md:text-lg">
-              The investigation now reads like a finished graphic story: every scene is visible at once, every clue is written out, and nothing requires clicking to continue.
-            </p>
-          </div>
-
-          <div className="order-1 overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] lg:order-2">
-            <div className="relative aspect-[4/5] md:aspect-[16/10] lg:aspect-[4/5]">
+      <header className="border-b-4 border-zinc-900 bg-zinc-950 px-4 py-6 md:px-6 md:py-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div className="relative aspect-[16/10] md:aspect-[16/8]">
               <ImageGenerator
                 imageId="main-intro-bg"
                 alt="Rain-soaked noir city skyline at night"
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.10),_transparent_35%),linear-gradient(to_top,_rgba(24,24,27,0.92),_rgba(24,24,27,0.18)_55%,_rgba(24,24,27,0.55))]" />
+              <div className="absolute left-4 top-4 max-w-[min(92%,820px)] border-[4px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-4 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] md:left-8 md:top-8 md:px-6 md:py-5">
+                <p className="mb-1 font-[--font-comic-title] text-sm tracking-[0.3em] text-red-600 md:text-base">
+                  READ-ONLY COMIC EDITION
+                </p>
+                <h1 className="font-[--font-comic-title] text-4xl leading-none text-zinc-950 md:text-6xl lg:text-7xl">
+                  The Case of Danny Krüger
+                </h1>
+                <p className="mt-2 font-[--font-comic] text-xl font-bold italic leading-tight text-zinc-950 md:text-3xl">
+                  A small crime in the age of AI coding
+                </p>
+              </div>
             </div>
+          </div>
+
+          <div className="mx-auto mt-5 max-w-4xl text-center">
+            <p className="font-[--font-comic] text-base font-bold leading-relaxed text-zinc-300 md:text-lg">
+              The story now reads as a static comic: each scene is fully visible, every clue is already on the page, and the artwork stays front and center.
+            </p>
           </div>
         </div>
       </header>

@@ -6,90 +6,91 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-4 md:px-6 md:py-6">
-      <article className="overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-100 text-zinc-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-        <div className="border-b-[4px] border-zinc-950 bg-red-600 px-4 py-4 text-white md:px-6">
-          <p className="mb-2 font-[--font-comic-title] text-sm tracking-[0.3em] text-zinc-100">
-            CASE FILE
-          </p>
-          <h2 className="font-[--font-comic-title] text-3xl leading-none tracking-wide md:text-4xl">
-            {panel.title ?? 'Evidence Board'}
-          </h2>
-        </div>
+      <article className="overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 text-zinc-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+        <div className="relative aspect-[16/11] md:aspect-[16/9]">
+          <ImageGenerator
+            imageId={panel.id}
+            alt={panel.imageAlt}
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.10),_transparent_30%),linear-gradient(to_top,_rgba(9,9,11,0.90),_rgba(9,9,11,0.12)_50%,_rgba(9,9,11,0.45))]" />
 
-        <div className="grid gap-0 xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,0.85fr)]">
-          <div className="border-b-[4px] border-zinc-950 bg-zinc-950 p-4 md:p-6 xl:border-b-0 xl:border-r-[4px]">
-            <div className="relative overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-black">
-              <div className="relative aspect-[16/10]">
-                <ImageGenerator
-                  imageId={panel.id}
-                  alt={panel.imageAlt}
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/50 via-transparent to-zinc-950/10" />
-                {hotspots.map((hotspot, index) => (
-                  <div
-                    key={hotspot.id}
-                    className="absolute -translate-x-1/2 -translate-y-1/2"
-                    style={{
-                      left: `${hotspot.x + hotspot.width / 2}%`,
-                      top: `${hotspot.y + hotspot.height / 2}%`,
-                    }}
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-yellow-300 font-[--font-comic-title] text-lg text-zinc-950 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                      {index + 1}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-4 space-y-3">
-              {panel.textBlocks.map((text, index) => (
-                <p
-                  key={index}
-                  className="rounded-2xl border-[3px] border-zinc-950 bg-white px-4 py-3 font-[--font-comic] text-base font-bold leading-relaxed text-zinc-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] md:text-lg"
-                >
-                  {text}
-                </p>
-              ))}
+          <div className="absolute left-4 top-4 max-w-[min(86%,34rem)] md:left-6 md:top-6">
+            <div className="inline-block max-w-full border-[4px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-4 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              <p className="mb-1 font-[--font-comic-title] text-sm tracking-[0.3em] text-red-600">
+                CASE FILE
+              </p>
+              <h2 className="font-[--font-comic-title] text-2xl leading-none tracking-wide text-zinc-950 md:text-4xl">
+                {panel.title ?? 'Evidence Board'}
+              </h2>
             </div>
           </div>
 
-          <div className="bg-zinc-100 p-4 md:p-6">
-            <h3 className="mb-4 border-b-[3px] border-zinc-950 pb-3 font-[--font-comic-title] text-2xl tracking-wide text-zinc-950">
-              Evidence Notes
-            </h3>
+          {hotspots.map((hotspot, index) => (
+            <div
+              key={hotspot.id}
+              className="absolute -translate-x-1/2 -translate-y-1/2"
+              style={{
+                left: `${hotspot.x + hotspot.width / 2}%`,
+                top: `${hotspot.y + hotspot.height / 2}%`,
+              }}
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-red-600 font-[--font-comic-title] text-lg text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] md:h-12 md:w-12 md:text-xl">
+                {index + 1}
+              </div>
+            </div>
+          ))}
 
-            <div className="space-y-4">
-              {hotspots.map((hotspot, index) => (
-                <section
-                  key={hotspot.id}
-                  className="rounded-sm border-[4px] border-zinc-950 bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+          <div className="absolute inset-x-3 bottom-3 md:inset-x-6 md:bottom-6">
+            <div className="grid gap-3 md:max-w-[70%]">
+              {panel.textBlocks.map((text, index) => (
+                <div
+                  key={index}
+                  className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-4 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                 >
-                  <div className="mb-3 flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-red-600 font-[--font-comic-title] text-lg text-white">
-                      {index + 1}
-                    </div>
-                    <h4 className="font-[--font-comic-title] text-2xl leading-none tracking-wide text-zinc-950">
-                      {hotspot.label}
-                    </h4>
-                  </div>
-
-                  <div className="space-y-3">
-                    {Object.entries(hotspot.interactions).map(([verb, note]) => (
-                      <div key={verb} className="rounded-2xl border-[3px] border-zinc-950 bg-amber-50 px-4 py-3">
-                        <p className="mb-1 font-[--font-comic-title] text-sm tracking-[0.2em] text-red-600">
-                          {verb}
-                        </p>
-                        <p className="font-[--font-comic] text-base font-bold leading-relaxed text-zinc-900">
-                          {note}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
+                  <p className="font-[--font-comic] text-base font-bold leading-relaxed text-zinc-950 md:text-lg">
+                    {text}
+                  </p>
+                </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        <div className="border-t-[4px] border-zinc-950 bg-zinc-100 p-4 md:p-6">
+          <h3 className="mb-4 font-[--font-comic-title] text-2xl tracking-wide text-zinc-950 md:text-3xl">
+            Evidence Notes
+          </h3>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            {hotspots.map((hotspot, index) => (
+              <section
+                key={hotspot.id}
+                className="rounded-sm border-[4px] border-zinc-950 bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+              >
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-yellow-300 font-[--font-comic-title] text-lg text-zinc-950">
+                    {index + 1}
+                  </div>
+                  <h4 className="font-[--font-comic-title] text-2xl leading-none tracking-wide text-zinc-950">
+                    {hotspot.label}
+                  </h4>
+                </div>
+
+                <div className="space-y-3">
+                  {Object.entries(hotspot.interactions).map(([verb, note]) => (
+                    <div key={verb} className="rounded-sm border-[3px] border-zinc-950 bg-amber-50 px-4 py-3">
+                      <p className="mb-1 font-[--font-comic-title] text-sm tracking-[0.2em] text-red-600">
+                        {verb}
+                      </p>
+                      <p className="font-[--font-comic] text-base font-bold leading-relaxed text-zinc-900">
+                        {note}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
           </div>
         </div>
       </article>
