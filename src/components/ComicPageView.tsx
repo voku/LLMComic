@@ -13,6 +13,7 @@ import { getGeneratedImagePath } from '../generatedImages';
  */
 export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumber: number }) {
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+  const [revealedCount, setRevealedCount] = useState(0);
 
   // Collect all hotspots from interactive panels on this page
   const hotspots: Hotspot[] = page.panels.flatMap(p => p.hotspots ?? []);
@@ -23,16 +24,30 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
 
   // Narrative text blocks from all panels on this page
   const allTextBlocks = page.panels.flatMap(p => p.textBlocks);
+  const hasText = allTextBlocks.length > 0;
+  const allRevealed = revealedCount >= allTextBlocks.length;
 
   // Titles from panels (first non-empty wins for the page badge)
   const pageTitle = page.panels.find(p => p.title)?.title;
 
   const currentHotspot = hotspots.find(h => h.id === activeHotspot) ?? null;
 
+  function handleImageClick() {
+    if (!allRevealed) {
+      setRevealedCount((c) => c + 1);
+    }
+  }
+
   return (
     <article className="overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
       {/* ── Image + scaling image map overlay ─────────────────────────── */}
-      <div className="relative w-full" style={aspectStyle}>
+      <div
+        className={`relative w-full${hasText && !allRevealed ? ' cursor-pointer select-none' : ''}`}
+        style={aspectStyle}
+        onClick={handleImageClick}
+        role={hasText && !allRevealed ? 'button' : undefined}
+        aria-label={hasText && !allRevealed ? 'Click to reveal story text' : undefined}
+      >
         {imagePath ? (
           <img
             src={imagePath}
@@ -89,9 +104,9 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
                   stroke={activeHotspot === hotspot.id ? 'rgba(220,38,38,0.85)' : 'rgba(220,38,38,0.45)'}
                   strokeWidth="0.5"
                   className="cursor-pointer transition-colors"
-                  onClick={() => setActiveHotspot(
+                  onClick={(e) => { e.stopPropagation(); setActiveHotspot(
                     activeHotspot === hotspot.id ? null : hotspot.id
-                  )}
+                  ); }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
@@ -131,21 +146,45 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
           </svg>
         )}
 
-        {/* Narration caption strip */}
-        <div className="absolute inset-x-3 bottom-3 md:inset-x-5 md:bottom-5">
-          <div className="flex flex-col gap-2 md:max-w-[72%]">
-            {allTextBlocks.map((text, i) => (
-              <div
-                key={i}
-                className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:px-4 md:py-3"
-              >
-                <p className="font-[--font-comic] text-xs font-bold leading-snug text-zinc-950 md:text-sm">
-                  {text}
-                </p>
-              </div>
-            ))}
+        {/* Narration caption strip – revealed one block per click */}
+        {revealedCount > 0 && (
+          <div className="absolute inset-x-3 bottom-10 md:inset-x-5 md:bottom-12">
+            <div className="flex flex-col gap-2 md:max-w-[72%]">
+              {allTextBlocks.slice(0, revealedCount).map((text, i) => (
+                <div
+                  key={i}
+                  className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:px-4 md:py-3"
+                >
+                  <p className="font-[--font-comic] text-xs font-bold leading-snug text-zinc-950 md:text-sm">
+                    {text}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Bottom bar: progress dots + tap-to-read hint */}
+        {hasText && (
+          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between md:inset-x-5 md:bottom-4">
+            <div className="flex gap-1.5">
+              {allTextBlocks.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-2 w-2 rounded-full border border-zinc-950 transition-colors ${
+                    i < revealedCount ? 'bg-red-500' : 'bg-zinc-400/60'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {!allRevealed && (
+              <div className="flex items-center gap-1 rounded-full border-[2px] border-zinc-950 bg-zinc-950/70 px-3 py-1 text-white backdrop-blur-sm">
+                <span className="font-[--font-comic] text-xs font-bold">tap to read</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── Hotspot detail panel (shown when a hotspot is active) ──────── */}

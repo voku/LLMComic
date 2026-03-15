@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ComicPanel as ComicPanelType } from '../data';
 import { ImageGenerator } from './ImageGenerator';
 
@@ -9,8 +10,24 @@ interface Props {
 }
 
 export function ComicPanel({ panel, index, featured = false }: Props) {
+  const [revealedCount, setRevealedCount] = useState(0);
+
+  const hasText = panel.textBlocks.length > 0;
+  const allRevealed = revealedCount >= panel.textBlocks.length;
+
+  function handleClick() {
+    if (!allRevealed) {
+      setRevealedCount((c) => c + 1);
+    }
+  }
+
   return (
-    <article className="overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 text-zinc-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+    <article
+      className={`overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 text-zinc-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]${hasText && !allRevealed ? ' cursor-pointer select-none' : ''}`}
+      onClick={handleClick}
+      role={hasText && !allRevealed ? 'button' : undefined}
+      aria-label={hasText && !allRevealed ? 'Click to reveal story text' : undefined}
+    >
       <div className={`relative ${featured ? 'aspect-[16/11]' : 'aspect-[16/10]'}`}>
         <ImageGenerator
           imageId={panel.id}
@@ -32,20 +49,47 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
           </div>
         )}
 
-        <div className="absolute inset-x-3 bottom-3 md:inset-x-6 md:bottom-6">
-          <div className="grid gap-3 md:max-w-[78%]">
-            {panel.textBlocks.map((text, textIndex) => (
-              <div
-                key={textIndex}
-                className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-4 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-              >
-                <p className="font-[--font-comic] text-sm font-bold leading-snug text-zinc-950 md:text-base">
-                  {text}
-                </p>
-              </div>
-            ))}
+        {/* Revealed text blocks (one shown per click) */}
+        {revealedCount > 0 && (
+          <div className="absolute inset-x-3 bottom-10 md:inset-x-6 md:bottom-12">
+            <div className="grid gap-3 md:max-w-[78%]">
+              {panel.textBlocks.slice(0, revealedCount).map((text, textIndex) => (
+                <div
+                  key={textIndex}
+                  className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-4 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                >
+                  <p className="font-[--font-comic] text-sm font-bold leading-snug text-zinc-950 md:text-base">
+                    {text}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Bottom bar: progress dots (left) + tap-to-read hint (right) */}
+        {hasText && (
+          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between md:inset-x-6 md:bottom-4">
+            {/* Progress dots */}
+            <div className="flex gap-1.5">
+              {panel.textBlocks.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-2 w-2 rounded-full border border-zinc-950 transition-colors ${
+                    i < revealedCount ? 'bg-red-500' : 'bg-zinc-400/60'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* "Tap to read" hint */}
+            {!allRevealed && (
+              <div className="flex items-center gap-1 rounded-full border-[2px] border-zinc-950 bg-zinc-950/70 px-3 py-1 text-white backdrop-blur-sm">
+                <span className="font-[--font-comic] text-xs font-bold">tap to read</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );
