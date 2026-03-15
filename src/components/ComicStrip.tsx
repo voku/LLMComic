@@ -7,27 +7,49 @@ interface Props {
 }
 
 /**
- * Renders a group of comic panels in a comic-book grid layout.
- * Panels are arranged in a 2-column grid with black gutters.
- * If the group has an odd number of panels, the last panel spans both columns.
+ * Renders a group of comic panels in a dynamic comic-book page layout.
+ * Uses a varied grid to avoid the monotonous "wall of identical rectangles"
+ * feel: the first panel in each strip gets a cinematic full-width layout,
+ * subsequent panels sit in a classic 2-col grid, and a trailing odd panel
+ * spans both columns.
  */
 export function ComicStrip({ panels, startIndex }: Props) {
+  // When a strip has 3+ panels the first one becomes a full-width "hero"
+  // to break up the uniform grid. With only 1-2 panels everything goes
+  // into the grid so the layout doesn't look unbalanced.
+  const hero = panels.length > 2 ? panels[0] : null;
+  const gridPanels = hero ? panels.slice(1) : panels;
+
   return (
-    <section className="relative z-10 border-b-8 border-zinc-950">
-      {/* Comic page gutters: dark background + small gap between panels */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-[3px] bg-zinc-950">
-        {panels.map((panel, i) => {
-          const isFeatured = panels.length % 2 === 1 && i === panels.length - 1;
-          return (
-            <ComicPanel
-              key={panel.id}
-              panel={panel}
-              index={startIndex + i}
-              featured={isFeatured}
-            />
-          );
-        })}
-      </div>
+    <section className="relative z-10 bg-zinc-950">
+      {/* Hero panel — full-width cinematic */}
+      {hero && (
+        <div className="border-[3px] border-zinc-950">
+          <ComicPanel panel={hero} index={startIndex} featured />
+        </div>
+      )}
+
+      {/* Remaining panels — 2-column grid */}
+      {gridPanels.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-1.5 bg-zinc-950 p-1 md:p-1.5">
+          {gridPanels.map((panel, i) => {
+            const globalIdx = startIndex + (hero ? i + 1 : i);
+            const isFeatured = gridPanels.length % 2 === 1 && i === gridPanels.length - 1;
+            return (
+              <div
+                key={panel.id}
+                className={`border-[3px] border-zinc-950 overflow-hidden ${isFeatured ? 'md:col-span-2' : ''}`}
+              >
+                <ComicPanel
+                  panel={panel}
+                  index={globalIdx}
+                  featured={isFeatured}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

@@ -90,9 +90,9 @@ export default function App() {
             transition={{ duration: 1, delay: 0.2 }}
             style={{ y: useTransform(scrollYProgress, [0, 0.1], [0, -100]) }}
           >
-            <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter text-white mb-6 drop-shadow-[6px_6px_0_rgba(0,0,0,1)]">
+            <h1 className="font-[--font-comic-title] text-6xl md:text-8xl lg:text-9xl tracking-wide text-white mb-6" style={{ textShadow: '4px 4px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' }}>
               The Case of <br />
-              <span className="text-red-600">Danny Krüger</span>
+              <span className="text-red-500">Danny Krüger</span>
             </h1>
           </motion.div>
 
@@ -102,7 +102,7 @@ export default function App() {
             transition={{ duration: 1, delay: 1 }}
             style={{ y: useTransform(scrollYProgress, [0, 0.1], [0, -50]) }}
           >
-            <p className="text-xl md:text-2xl text-zinc-400 font-medium tracking-wide uppercase max-w-2xl mx-auto border-y border-zinc-800 py-4 bg-zinc-950/50 backdrop-blur-sm">
+            <p className="text-xl md:text-2xl text-zinc-300 font-[--font-comic] font-bold tracking-wide max-w-2xl mx-auto border-y-4 border-zinc-700 py-4 bg-zinc-950/60 backdrop-blur-sm">
               A small crime in the age of AI coding
             </p>
           </motion.div>
@@ -142,10 +142,10 @@ export default function App() {
       {/* ── Footer ──────────────────────────────────────────────────────── */}
       <footer className="bg-zinc-950 py-24 text-center border-t border-zinc-900 relative z-10">
         <div className="max-w-2xl mx-auto px-6">
-          <h2 className="font-serif text-3xl font-bold text-white mb-6 uppercase tracking-wider">
+          <h2 className="font-[--font-comic-title] text-4xl text-white mb-6 tracking-wide">
             Case Closed
           </h2>
-          <p className="text-zinc-400 text-lg">
+          <p className="text-zinc-400 text-lg font-[--font-comic]">
             Based on the blog post "The Case of Danny Krüger".<br />
             An interactive comic investigation.<br />
             <a
