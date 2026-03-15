@@ -71,9 +71,9 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, margin: "-10%" }}
-            className="bg-red-600 inline-block text-white px-6 py-3 border-4 border-zinc-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transform -rotate-1"
+            className="bg-yellow-300 inline-block text-zinc-950 px-6 py-3 border-[3px] border-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
           >
-            <h2 className="font-serif text-2xl md:text-3xl font-black uppercase tracking-wider">
+            <h2 className="font-[--font-comic-title] text-2xl md:text-3xl tracking-wide">
               Interactive Scene: {panel.title}
             </h2>
           </motion.div>
@@ -166,7 +166,7 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
           {/* Dialogue Box */}
           <div className="w-full md:w-2/3 p-8 flex items-start bg-zinc-900 relative">
             <div className="absolute top-4 left-4 w-2 h-2 bg-red-600 rounded-full animate-pulse" />
-            <p className="font-mono text-lg md:text-xl text-green-400 leading-relaxed pl-4">
+            <p className="font-[--font-comic] text-lg md:text-xl text-green-400 leading-relaxed pl-4 font-bold">
               <TypewriterText text={message} />
             </p>
           </div>
