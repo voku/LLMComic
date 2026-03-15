@@ -1,8 +1,6 @@
 import { ComicPanel } from '../data';
 import { ImageGenerator } from './ImageGenerator';
 
-const VERBS = ['Inspect', 'Analyze', 'Interrogate'] as const;
-
 export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
   const hotspots = panel.hotspots ?? [];
 
@@ -78,24 +76,16 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
                   </div>
 
                   <div className="space-y-3">
-                    {VERBS.map((verb) => {
-                      const note = hotspot.interactions[verb];
-
-                      if (!note) {
-                        return null;
-                      }
-
-                      return (
-                        <div key={verb} className="rounded-2xl border-[3px] border-zinc-950 bg-amber-50 px-4 py-3">
-                          <p className="mb-1 font-[--font-comic-title] text-sm tracking-[0.2em] text-red-600">
-                            {verb}
-                          </p>
-                          <p className="font-[--font-comic] text-base font-bold leading-relaxed text-zinc-900">
-                            {note}
-                          </p>
-                        </div>
-                      );
-                    })}
+                    {Object.entries(hotspot.interactions).map(([verb, note]) => (
+                      <div key={verb} className="rounded-2xl border-[3px] border-zinc-950 bg-amber-50 px-4 py-3">
+                        <p className="mb-1 font-[--font-comic-title] text-sm tracking-[0.2em] text-red-600">
+                          {verb}
+                        </p>
+                        <p className="font-[--font-comic] text-base font-bold leading-relaxed text-zinc-900">
+                          {note}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </section>
               ))}
