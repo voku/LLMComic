@@ -58,22 +58,55 @@ export default function App() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.10),_transparent_35%),linear-gradient(to_top,_rgba(24,24,27,0.92),_rgba(24,24,27,0.18)_55%,_rgba(24,24,27,0.55))]" />
               <div className="absolute left-4 top-4 max-w-[min(92%,820px)] border-[4px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-4 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] md:left-8 md:top-8 md:px-6 md:py-5">
                 <p className="mb-1 font-[--font-comic-title] text-sm tracking-[0.3em] text-red-600 md:text-base">
-                  READ-ONLY COMIC EDITION
+                  A NOIR CASE FILE
                 </p>
                 <h1 className="font-[--font-comic-title] text-4xl leading-none text-zinc-950 md:text-6xl lg:text-7xl">
                   The Case of Danny Krüger
                 </h1>
                 <p className="mt-2 font-[--font-comic] text-xl font-bold italic leading-tight text-zinc-950 md:text-3xl">
-                  A small crime in the age of AI coding
+                  A detective story about AI code that looked right until reality caught up.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mx-auto mt-5 max-w-4xl text-center">
-            <p className="font-[--font-comic] text-base font-bold leading-relaxed text-zinc-300 md:text-lg">
-              The story now reads as a static comic: each scene is fully visible, every clue is already on the page, and the artwork stays front and center.
-            </p>
+          <div className="mx-auto mt-5 grid max-w-6xl gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+            <section className="rounded-sm border-[4px] border-zinc-950 bg-zinc-900/85 p-5 text-left shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <p className="font-[--font-comic-title] text-sm tracking-[0.28em] text-red-500">
+                BEFORE YOU OPEN THE FILE
+              </p>
+              <p className="mt-3 font-[--font-comic] text-base font-bold leading-relaxed text-zinc-100 md:text-lg">
+                Danny ships faster and faster with AI at his side. Then the clues start piling up: duplicate search results, missing products, and code that looks polished right up until the system meets the real world.
+              </p>
+              <p className="mt-3 font-[--font-comic] text-sm font-bold leading-relaxed text-zinc-300 md:text-base">
+                Read it like a case report: follow the symptoms, inspect the evidence, and watch how verification exposes the gap between plausible code and understood systems.
+              </p>
+            </section>
+
+            <section className="rounded-sm border-[4px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] p-5 text-zinc-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <p className="font-[--font-comic-title] text-sm tracking-[0.28em] text-red-600">
+                CONFIDENCE VS. UNDERSTANDING
+              </p>
+              <div className="mt-4 rounded-sm border-[3px] border-zinc-950 bg-white p-3">
+                <svg viewBox="0 0 240 140" className="h-auto w-full" role="img" aria-labelledby="confidence-diagram-title">
+                  <title id="confidence-diagram-title">Confidence versus understanding diagram</title>
+                  <line x1="26" y1="12" x2="26" y2="116" stroke="#18181b" strokeWidth="3" />
+                  <line x1="26" y1="116" x2="224" y2="116" stroke="#18181b" strokeWidth="3" />
+                  <path d="M26 110 C48 38, 84 18, 110 34 S150 98, 224 70" fill="none" stroke="#dc2626" strokeWidth="6" strokeLinecap="round" />
+                  <circle cx="84" cy="28" r="7" fill="#facc15" stroke="#18181b" strokeWidth="3" />
+                  <circle cx="144" cy="88" r="7" fill="#facc15" stroke="#18181b" strokeWidth="3" />
+                  <circle cx="210" cy="74" r="7" fill="#facc15" stroke="#18181b" strokeWidth="3" />
+                  <text x="34" y="18" fontSize="11" fontWeight="700" fill="#18181b">confidence</text>
+                  <text x="162" y="132" fontSize="11" fontWeight="700" fill="#18181b">system knowledge</text>
+                  <text x="52" y="20" fontSize="10" fontWeight="700" fill="#18181b">looks easy</text>
+                  <text x="124" y="104" fontSize="10" fontWeight="700" fill="#18181b">hidden constraints</text>
+                  <text x="172" y="58" fontSize="10" fontWeight="700" fill="#18181b">verification</text>
+                </svg>
+              </div>
+              <p className="mt-3 font-[--font-comic] text-sm font-bold leading-relaxed md:text-base">
+                The popular meme version is just a shorthand, but the feeling is familiar: confidence can surge long before real understanding arrives.
+              </p>
+            </section>
           </div>
         </div>
       </header>
@@ -83,7 +116,7 @@ export default function App() {
         {comicPages.length > 0 && (
           <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 md:gap-8 md:px-6">
             {comicPages.map((page, i) => (
-              <ComicPageView key={page.id} page={page} pageNumber={i + 1} />
+              <ComicPageView key={page.id} page={page} pageNumber={i + 1} pages={comicPages} pageIndex={i} />
             ))}
           </div>
         )}
@@ -107,20 +140,47 @@ export default function App() {
             Case Closed
           </h2>
           <p className="text-lg font-[--font-comic] text-zinc-300">
-            Based on the blog post "The Case of Danny Krüger".
-            <br />
-            Presented here as a clean, static comic reader.
-            <br />
+            Danny's mistake was not using AI. It was confusing fluent output with verified knowledge.
+          </p>
+
+          <div className="mt-8 grid gap-4 text-left md:grid-cols-3">
             <a
               href="https://github.com/voku/LLMComic"
               target="_blank"
               rel="noreferrer"
-              aria-label="Contribute to LLMComic on GitHub"
-              className="text-red-500 underline underline-offset-4 hover:text-red-400"
+              aria-label="Read the original LLMComic project on GitHub"
+              className="rounded-sm border-[4px] border-zinc-950 bg-zinc-900 p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1"
             >
-              Contribute on GitHub
+              <p className="font-[--font-comic-title] text-sm tracking-[0.22em] text-red-500">ORIGINAL STORY</p>
+              <p className="mt-2 font-[--font-comic] text-base font-bold text-zinc-100">
+                Read the project source and original case file on GitHub.
+              </p>
             </a>
-          </p>
+            <a
+              href="https://www.britannica.com/science/Dunning-Kruger-effect"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Read a science explanation of the Dunning-Kruger effect"
+              className="rounded-sm border-[4px] border-zinc-950 bg-zinc-900 p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1"
+            >
+              <p className="font-[--font-comic-title] text-sm tracking-[0.22em] text-red-500">SCIENCE</p>
+              <p className="mt-2 font-[--font-comic] text-base font-bold text-zinc-100">
+                Learn why low understanding often comes with poor self-evaluation.
+              </p>
+            </a>
+            <a
+              href="https://en.wikipedia.org/wiki/Dunning%E2%80%93Kruger_effect"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Read more about the popular Dunning-Kruger diagram and its context"
+              className="rounded-sm border-[4px] border-zinc-950 bg-zinc-900 p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1"
+            >
+              <p className="font-[--font-comic-title] text-sm tracking-[0.22em] text-red-500">POPULAR MEME</p>
+              <p className="mt-2 font-[--font-comic] text-base font-bold text-zinc-100">
+                See the broader context behind the familiar confidence-versus-knowledge diagram.
+              </p>
+            </a>
+          </div>
         </div>
       </footer>
     </div>

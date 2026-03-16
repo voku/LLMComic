@@ -12,10 +12,20 @@ import { ImageLightbox, ExpandButton } from './ImageLightbox';
  * marker scales automatically at any viewport width — no JavaScript resize
  * listener required.
  */
-export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumber: number }) {
+export function ComicPageView({
+  page,
+  pageNumber,
+  pages = [page],
+  pageIndex = 0,
+}: {
+  page: ComicPage;
+  pageNumber: number;
+  pages?: ComicPage[];
+  pageIndex?: number;
+}) {
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
   const [revealedCount, setRevealedCount] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   // Collect all hotspots from interactive panels on this page
   const hotspots: Hotspot[] = page.panels.flatMap(p => p.hotspots ?? []);
@@ -33,6 +43,10 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
   const pageTitle = page.panels.find(p => p.title)?.title;
 
   const currentHotspot = hotspots.find(h => h.id === activeHotspot) ?? null;
+  const activeLightboxPage = lightboxIndex === null ? null : pages[lightboxIndex];
+  const activeLightboxPath = activeLightboxPage
+    ? getGeneratedImagePath(activeLightboxPage.id, import.meta.env.BASE_URL)
+    : null;
 
   function handleImageClick() {
     if (!allRevealed) {
@@ -68,10 +82,10 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
         {/* Dark gradient so text and markers stay readable */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_35%),linear-gradient(to_top,_rgba(9,9,11,0.85),_rgba(9,9,11,0.06)_50%,_rgba(9,9,11,0.40))]" />
 
-        {/* Page badge – visible only on hover / keyboard focus */}
-        <div className="absolute left-3 top-3 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 md:left-5 md:top-5">
+        {/* Page badge – always visible on touch devices, subtle on larger screens */}
+        <div className="absolute left-3 top-3 opacity-100 transition-opacity md:left-5 md:top-5 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
           <div className="inline-block border-[4px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-3 py-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] md:px-5 md:py-3">
-            <p className="font-[--font-comic-title] text-[10px] tracking-[0.28em] text-red-600 md:text-xs">
+            <p className="font-[--font-comic-title] text-xs tracking-[0.28em] text-red-600 md:text-sm">
               PAGE {pageNumber}
             </p>
             {pageTitle && (
@@ -83,7 +97,7 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
         </div>
 
         {/* Expand / fullscreen button – visible only on hover / keyboard focus */}
-        {imagePath && <ExpandButton onExpand={() => setLightboxOpen(true)} />}
+        {imagePath && <ExpandButton onExpand={() => setLightboxIndex(pageIndex)} />}
 
         {/* ── SVG scaling image map ──────────────────────────────────────
             viewBox="0 0 100 100" + preserveAspectRatio="none" maps the
@@ -158,9 +172,9 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
               {allTextBlocks.slice(0, revealedCount).map((text, i) => (
                 <div
                   key={i}
-                  className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:px-4 md:py-3"
+                  className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:px-4 sm:py-3"
                 >
-                  <p className="font-[--font-comic] text-xs font-bold leading-snug text-zinc-950 md:text-sm">
+                  <p className="font-[--font-comic] text-xs font-bold leading-snug text-zinc-950 sm:text-sm md:text-sm">
                     {text}
                   </p>
                 </div>
@@ -171,7 +185,7 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
 
         {/* Bottom bar: progress dots + tap-to-read hint */}
         {hasText && (
-          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between md:inset-x-5 md:bottom-4">
+          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 md:inset-x-5 md:bottom-4">
             <div className="flex gap-1.5">
               {allTextBlocks.map((_, i) => (
                 <div
@@ -184,7 +198,7 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
             </div>
 
             {!allRevealed && (
-              <div className="flex items-center gap-1 rounded-full border-[2px] border-zinc-950 bg-zinc-950/70 px-3 py-1 text-white backdrop-blur-sm">
+              <div className="flex items-center gap-1 rounded-full border-[2px] border-zinc-950 bg-zinc-950/70 px-2.5 py-1 text-white backdrop-blur-sm sm:px-3">
                 <span className="font-[--font-comic] text-xs font-bold">tap to read</span>
               </div>
             )}
@@ -229,12 +243,12 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
                   key={hotspot.id}
                   type="button"
                   onClick={() => setActiveHotspot(hotspot.id)}
-                  className="flex items-center gap-3 rounded-sm border-[3px] border-zinc-950 bg-white px-3 py-3 text-left shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]"
+                  className="flex items-center gap-2 rounded-sm border-[3px] border-zinc-950 bg-white px-2.5 py-2.5 text-left shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] active:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] sm:gap-3 sm:px-3 sm:py-3"
                 >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-red-600 font-[--font-comic-title] text-base text-white">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-red-600 font-[--font-comic-title] text-sm text-white sm:text-base">
                     {idx + 1}
                   </span>
-                  <span className="font-[--font-comic-title] text-lg leading-tight tracking-wide text-zinc-950">
+                  <span className="font-[--font-comic-title] text-base leading-tight tracking-wide text-zinc-950 sm:text-lg">
                     {hotspot.label}
                   </span>
                 </button>
@@ -245,8 +259,17 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
       )}
 
       {/* Full-screen lightbox */}
-      {lightboxOpen && imagePath && (
-        <ImageLightbox src={imagePath} alt={page.imageAlt} onClose={() => setLightboxOpen(false)} />
+      {activeLightboxPage && activeLightboxPath && (
+        <ImageLightbox
+          src={activeLightboxPath}
+          alt={activeLightboxPage.imageAlt}
+          onClose={() => setLightboxIndex(null)}
+          onPrev={lightboxIndex !== null && lightboxIndex > 0 ? () => setLightboxIndex(lightboxIndex - 1) : undefined}
+          onNext={lightboxIndex !== null && lightboxIndex < pages.length - 1 ? () => setLightboxIndex(lightboxIndex + 1) : undefined}
+          prevLabel="View previous page"
+          nextLabel="View next page"
+          counterLabel={lightboxIndex !== null ? `Page ${lightboxIndex + 1} of ${pages.length}` : undefined}
+        />
       )}
     </article>
   );

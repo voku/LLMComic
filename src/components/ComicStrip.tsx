@@ -14,6 +14,8 @@ export function ComicStrip({ panels, startIndex }: Props) {
           key={panel.id}
           panel={panel}
           index={startIndex + i}
+          galleryPanels={panels}
+          galleryIndex={i}
         />
       ))}
     </section>
