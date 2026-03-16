@@ -12,10 +12,20 @@ import { ImageLightbox, ExpandButton } from './ImageLightbox';
  * marker scales automatically at any viewport width — no JavaScript resize
  * listener required.
  */
-export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumber: number }) {
+export function ComicPageView({
+  page,
+  pageNumber,
+  pages = [page],
+  pageIndex = 0,
+}: {
+  page: ComicPage;
+  pageNumber: number;
+  pages?: ComicPage[];
+  pageIndex?: number;
+}) {
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
   const [revealedCount, setRevealedCount] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   // Collect all hotspots from interactive panels on this page
   const hotspots: Hotspot[] = page.panels.flatMap(p => p.hotspots ?? []);
@@ -33,6 +43,10 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
   const pageTitle = page.panels.find(p => p.title)?.title;
 
   const currentHotspot = hotspots.find(h => h.id === activeHotspot) ?? null;
+  const activeLightboxPage = lightboxIndex === null ? null : pages[lightboxIndex];
+  const activeLightboxPath = activeLightboxPage
+    ? getGeneratedImagePath(activeLightboxPage.id, import.meta.env.BASE_URL)
+    : null;
 
   function handleImageClick() {
     if (!allRevealed) {
@@ -83,7 +97,7 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
         </div>
 
         {/* Expand / fullscreen button – visible only on hover / keyboard focus */}
-        {imagePath && <ExpandButton onExpand={() => setLightboxOpen(true)} />}
+        {imagePath && <ExpandButton onExpand={() => setLightboxIndex(pageIndex)} />}
 
         {/* ── SVG scaling image map ──────────────────────────────────────
             viewBox="0 0 100 100" + preserveAspectRatio="none" maps the
@@ -245,8 +259,17 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
       )}
 
       {/* Full-screen lightbox */}
-      {lightboxOpen && imagePath && (
-        <ImageLightbox src={imagePath} alt={page.imageAlt} onClose={() => setLightboxOpen(false)} />
+      {activeLightboxPage && activeLightboxPath && (
+        <ImageLightbox
+          src={activeLightboxPath}
+          alt={activeLightboxPage.imageAlt}
+          onClose={() => setLightboxIndex(null)}
+          onPrev={lightboxIndex && lightboxIndex > 0 ? () => setLightboxIndex(lightboxIndex - 1) : undefined}
+          onNext={lightboxIndex !== null && lightboxIndex < pages.length - 1 ? () => setLightboxIndex(lightboxIndex + 1) : undefined}
+          prevLabel="View previous page"
+          nextLabel="View next page"
+          counterLabel={`Page ${lightboxIndex + 1} of ${pages.length}`}
+        />
       )}
     </article>
   );

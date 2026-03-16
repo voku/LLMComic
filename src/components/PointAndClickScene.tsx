@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { ComicPanel } from '../data';
 import { ImageGenerator } from './ImageGenerator';
+import { ExpandButton, ImageLightbox } from './ImageLightbox';
+import { getGeneratedImagePath } from '../generatedImages';
 
 export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
   const hotspots = panel.hotspots ?? [];
   const [revealedCount, setRevealedCount] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const imagePath = getGeneratedImagePath(panel.id, import.meta.env.BASE_URL);
 
   const hasText = panel.textBlocks.length > 0;
   const allRevealed = revealedCount >= panel.textBlocks.length;
@@ -30,6 +34,8 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.10),_transparent_30%),linear-gradient(to_top,_rgba(9,9,11,0.90),_rgba(9,9,11,0.12)_50%,_rgba(9,9,11,0.45))]" />
+
+          {imagePath && <ExpandButton onExpand={() => setLightboxOpen(true)} />}
 
           <div className="absolute left-4 top-4 max-w-[min(86%,34rem)] md:left-6 md:top-6">
             <div className="inline-block max-w-full border-[4px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-4 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
@@ -135,6 +141,14 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
           </div>
         </div>
       </article>
+
+      {lightboxOpen && imagePath && (
+        <ImageLightbox
+          src={imagePath}
+          alt={panel.imageAlt}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </section>
   );
 }

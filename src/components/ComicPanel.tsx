@@ -7,15 +7,28 @@ import { getGeneratedImagePath } from '../generatedImages';
 interface Props {
   panel: ComicPanelType;
   index: number;
+  galleryPanels?: ComicPanelType[];
+  galleryIndex?: number;
   /** When true the panel spans both columns in the comic grid */
   featured?: boolean;
 }
 
-export function ComicPanel({ panel, index, featured = false }: Props) {
+export function ComicPanel({
+  panel,
+  index,
+  galleryPanels,
+  galleryIndex = 0,
+  featured = false,
+}: Props) {
   const [revealedCount, setRevealedCount] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const imagePath = getGeneratedImagePath(panel.id, import.meta.env.BASE_URL);
+  const lightboxPanels = galleryPanels ?? [panel];
+  const activeLightboxPanel = lightboxIndex === null ? null : lightboxPanels[lightboxIndex];
+  const activeImagePath = activeLightboxPanel
+    ? getGeneratedImagePath(activeLightboxPanel.id, import.meta.env.BASE_URL)
+    : null;
 
   const hasText = panel.textBlocks.length > 0;
   const allRevealed = revealedCount >= panel.textBlocks.length;
@@ -55,7 +68,7 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
         )}
 
         {/* Expand / fullscreen button – visible only on hover / keyboard focus */}
-        {imagePath && <ExpandButton onExpand={() => setLightboxOpen(true)} />}
+        {imagePath && <ExpandButton onExpand={() => setLightboxIndex(galleryIndex)} />}
 
         {/* Revealed text blocks (one shown per click) */}
         {revealedCount > 0 && (
@@ -101,8 +114,17 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
       </div>
 
       {/* Full-screen lightbox */}
-      {lightboxOpen && imagePath && (
-        <ImageLightbox src={imagePath} alt={panel.imageAlt} onClose={() => setLightboxOpen(false)} />
+      {activeLightboxPanel && activeImagePath && (
+        <ImageLightbox
+          src={activeImagePath}
+          alt={activeLightboxPanel.imageAlt}
+          onClose={() => setLightboxIndex(null)}
+          onPrev={lightboxIndex && lightboxIndex > 0 ? () => setLightboxIndex(lightboxIndex - 1) : undefined}
+          onNext={lightboxIndex !== null && lightboxIndex < lightboxPanels.length - 1 ? () => setLightboxIndex(lightboxIndex + 1) : undefined}
+          prevLabel="View previous panel"
+          nextLabel="View next panel"
+          counterLabel={`Panel ${lightboxIndex + 1} of ${lightboxPanels.length}`}
+        />
       )}
     </article>
   );

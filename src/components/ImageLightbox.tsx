@@ -5,6 +5,11 @@ interface LightboxProps {
   src: string;
   alt: string;
   onClose: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
+  prevLabel?: string;
+  nextLabel?: string;
+  counterLabel?: string;
 }
 
 interface ExpandButtonProps {
@@ -19,7 +24,16 @@ interface ExpandButtonProps {
  * - The image uses `object-contain` so the full artwork is always visible,
  *   regardless of screen size or aspect ratio.
  */
-export function ImageLightbox({ src, alt, onClose }: LightboxProps) {
+export function ImageLightbox({
+  src,
+  alt,
+  onClose,
+  onPrev,
+  onNext,
+  prevLabel = 'Previous image',
+  nextLabel = 'Next image',
+  counterLabel,
+}: LightboxProps) {
   // Lock body scroll while the lightbox is mounted
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -31,10 +45,12 @@ export function ImageLightbox({ src, alt, onClose }: LightboxProps) {
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') onPrev?.();
+      if (e.key === 'ArrowRight') onNext?.();
     }
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose]);
+  }, [onClose, onPrev, onNext]);
 
   return createPortal(
     /* Backdrop — click outside image to close */
@@ -45,24 +61,63 @@ export function ImageLightbox({ src, alt, onClose }: LightboxProps) {
       aria-modal="true"
       aria-label={`Full-screen view: ${alt}`}
     >
-      {/* Close button (top-right) */}
-      <button
-        type="button"
-        onClick={onClose}
-        className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] font-[--font-comic-title] text-xl text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:right-5 md:top-5"
-        aria-label="Close full-screen view"
-      >
-        ✕
-      </button>
+      <div className="absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-3 md:inset-x-5 md:top-5">
+        <div className="flex gap-2">
+          {onPrev && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onPrev();
+              }}
+              className="flex h-10 min-w-10 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-3 font-[--font-comic-title] text-base text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              aria-label={prevLabel}
+            >
+              ‹
+            </button>
+          )}
+          {onNext && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNext();
+              }}
+              className="flex h-10 min-w-10 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-3 font-[--font-comic-title] text-base text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              aria-label={nextLabel}
+            >
+              ›
+            </button>
+          )}
+        </div>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+          className="flex h-10 w-10 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] font-[--font-comic-title] text-xl text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+          aria-label="Close full-screen view"
+        >
+          ✕
+        </button>
+      </div>
 
       {/* Full image — stop click from bubbling to backdrop */}
-      <img
-        src={src}
-        alt={alt}
-        className="max-h-full max-w-full border-[4px] border-zinc-950 object-contain shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]"
-        onClick={(e) => e.stopPropagation()}
-        draggable={false}
-      />
+      <div className="flex max-h-full max-w-full flex-col items-center gap-3" onClick={(e) => e.stopPropagation()}>
+        <img
+          src={src}
+          alt={alt}
+          className="max-h-[82vh] max-w-full border-[4px] border-zinc-950 object-contain shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]"
+          draggable={false}
+        />
+        {counterLabel && (
+          <p className="rounded-full border-[3px] border-zinc-950 bg-zinc-100 px-4 py-2 text-center font-[--font-comic] text-sm font-bold text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:text-base">
+            {counterLabel}
+          </p>
+        )}
+      </div>
     </div>,
     document.body,
   );
@@ -78,7 +133,7 @@ export function ExpandButton({ onExpand }: ExpandButtonProps) {
     <button
       type="button"
       onClick={(e) => { e.stopPropagation(); onExpand(); }}
-      className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center border-[3px] border-zinc-950 bg-zinc-950/80 text-white opacity-0 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] backdrop-blur-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 md:right-5 md:top-5 md:h-10 md:w-10"
+      className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center border-[3px] border-zinc-950 bg-zinc-950/80 text-white opacity-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] backdrop-blur-sm transition-opacity md:right-5 md:top-5 md:h-10 md:w-10 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
       aria-label="View full screen"
     >
       <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true">
