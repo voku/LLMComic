@@ -109,6 +109,7 @@ export function ImageLightbox({
 
       {/* Full image — stop click from bubbling to backdrop */}
       <div className="flex max-h-full max-w-full flex-col items-center gap-3" onClick={(e) => e.stopPropagation()}>
+        {/* Reserve vertical space on small screens for the top controls, counter, and modal padding. */}
         <img
           src={src}
           alt={alt}
