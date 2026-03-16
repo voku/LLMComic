@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { ComicPanel as ComicPanelType } from '../data';
 import { ImageGenerator } from './ImageGenerator';
+import { ImageLightbox, ExpandButton } from './ImageLightbox';
+import { getGeneratedImagePath } from '../generatedImages';
 
 interface Props {
   panel: ComicPanelType;
@@ -11,6 +13,9 @@ interface Props {
 
 export function ComicPanel({ panel, index, featured = false }: Props) {
   const [revealedCount, setRevealedCount] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const imagePath = getGeneratedImagePath(panel.id, import.meta.env.BASE_URL);
 
   const hasText = panel.textBlocks.length > 0;
   const allRevealed = revealedCount >= panel.textBlocks.length;
@@ -23,7 +28,7 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
 
   return (
     <article
-      className={`overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 text-zinc-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]${hasText && !allRevealed ? ' cursor-pointer select-none' : ''}`}
+      className={`group overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 text-zinc-950 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]${hasText && !allRevealed ? ' cursor-pointer select-none' : ''}`}
       onClick={handleClick}
       role={hasText && !allRevealed ? 'button' : undefined}
       aria-label={hasText && !allRevealed ? 'Click to reveal story text' : undefined}
@@ -48,6 +53,9 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
             </div>
           </div>
         )}
+
+        {/* Expand / fullscreen button – visible only on hover / keyboard focus */}
+        {imagePath && <ExpandButton onExpand={() => setLightboxOpen(true)} />}
 
         {/* Revealed text blocks (one shown per click) */}
         {revealedCount > 0 && (
@@ -91,6 +99,11 @@ export function ComicPanel({ panel, index, featured = false }: Props) {
           </div>
         )}
       </div>
+
+      {/* Full-screen lightbox */}
+      {lightboxOpen && imagePath && (
+        <ImageLightbox src={imagePath} alt={panel.imageAlt} onClose={() => setLightboxOpen(false)} />
+      )}
     </article>
   );
 }
