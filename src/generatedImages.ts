@@ -28,7 +28,6 @@ export const generatedImages = {
   'quiet-witness-bg': 'generated/quiet-witness-bg.svg',
   'danny-kruger-effect': 'generated/danny-kruger-effect.svg',
   'danny-kruger-effect-bg': 'generated/danny-kruger-effect-bg.svg',
-  'reality-arrives': 'generated/reality-arrives.svg',
   'real-shift': 'generated/real-shift.svg',
   'closing-case': 'generated/closing-case.svg',
 } as const;

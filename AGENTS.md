@@ -87,17 +87,25 @@ Every new contribution must fit one of these beats — not invent a new directio
 
 **Mapping to existing panels** (in `src/data.ts`):
 
-| Panel ID | Beat |
-|----------|------|
-| `intro` | 1 — framing the crime |
-| `symptoms` | 3 — system appears to work but oddities surface |
-| `new-engineer` | 2 — Danny is fast and trusted |
-| `the-tools` | 2 — AI tools are the accelerant |
-| `cheap-part` | 1 — coding becomes cheap |
-| `the-catch` | 3 — outputs exist but real value is missing |
-| `first-clue` | 5/6 — inconsistencies found in search index |
-| `workflow` | 2 — belief instead of understanding |
-| `pattern-mirrors` | 1 — LLMs recombine, not design |
+| Panel ID | Beat | Page |
+|----------|------|------|
+| `intro` | 1 — framing the crime | 1 |
+| `new-engineer` | 2 — Danny is fast and trusted | 1 |
+| `the-tools` | 2 — AI tools are the accelerant | 2 |
+| `cheap-part` | 1 — coding becomes cheap | 2 |
+| `pattern-mirrors` | 1 — LLMs recombine, not design | 3 |
+| `the-catch` | 3 — outputs exist but real value is missing | 3 |
+| `symptoms` | 3 — system appears to work but oddities surface | 4 |
+| `workflow` | 2/4 — belief instead of understanding | 4 |
+| `happy-path` | 4 — hidden constraints appear | 5 |
+| `slow-decay` | 4 — context rot sets in | 5 |
+| `first-clue` | 5/6 — inconsistencies found in search index | 6 |
+| `missing-knowledge` | 6 — investigation deepens | 7 |
+| `quiet-witness` | 7 — verification tools reveal the truth | 7 |
+| `danny-kruger-effect` | 7/8 — the belief-trap exposed | 7 |
+| `eighty-eighty` | 7 — the real cost of believing over knowing | 8 |
+| `real-shift` | 8 — the bottleneck has moved | 8 |
+| `closing-case` | 8 — Danny learns to verify | 8 |
 
 New panels must slot clearly into one of the eight beats above.
 
