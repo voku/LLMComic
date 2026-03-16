@@ -87,8 +87,11 @@ Every new contribution must fit one of these beats — not invent a new directio
 
 **Mapping to existing panels** (in `src/data.ts`):
 
-| Panel ID | Beat | Page |
-|----------|------|------|
+Pages 1–4 are backed by uploaded PNG artwork in `comicPages`. Pages 5+ render via the
+SVG strip/interactive layout (panels not assigned to a `comicPage` are rendered automatically).
+
+| Panel ID | Beat | PNG page |
+|----------|------|----------|
 | `intro` | 1 — framing the crime | 1 |
 | `new-engineer` | 2 — Danny is fast and trusted | 1 |
 | `the-tools` | 2 — AI tools are the accelerant | 2 |
@@ -97,15 +100,15 @@ Every new contribution must fit one of these beats — not invent a new directio
 | `the-catch` | 3 — outputs exist but real value is missing | 3 |
 | `symptoms` | 3 — system appears to work but oddities surface | 4 |
 | `workflow` | 2/4 — belief instead of understanding | 4 |
-| `happy-path` | 4 — hidden constraints appear | 5 |
-| `slow-decay` | 4 — context rot sets in | 5 |
-| `first-clue` | 5/6 — inconsistencies found in search index | 6 |
-| `missing-knowledge` | 6 — investigation deepens | 7 |
-| `quiet-witness` | 7 — verification tools reveal the truth | 7 |
-| `danny-kruger-effect` | 7/8 — the belief-trap exposed | 7 |
-| `eighty-eighty` | 7 — the real cost of believing over knowing | 8 |
-| `real-shift` | 8 — the bottleneck has moved | 8 |
-| `closing-case` | 8 — Danny learns to verify | 8 |
+| `happy-path` | 4 — hidden constraints appear | SVG strip |
+| `slow-decay` | 4 — context rot sets in | SVG strip |
+| `first-clue` | 5/6 — inconsistencies found in search index | SVG interactive |
+| `missing-knowledge` | 6 — investigation deepens | SVG interactive |
+| `quiet-witness` | 7 — verification tools reveal the truth | SVG interactive |
+| `danny-kruger-effect` | 7/8 — the belief-trap exposed | SVG interactive |
+| `eighty-eighty` | 7 — AI generates 80% fast; the remaining 20% takes 80% of the time | SVG strip |
+| `real-shift` | 8 — the bottleneck has moved | SVG strip |
+| `closing-case` | 8 — Danny learns to verify | SVG strip |
 
 New panels must slot clearly into one of the eight beats above.
 

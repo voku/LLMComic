@@ -215,13 +215,13 @@ export const panels: ComicPanel[] = [
     type: "comic",
     title: "The 80/80 effect",
     textBlocks: [
-      "Danny often described his workflow with pride: “AI already writes most of the code.”",
-      "But writing syntax isn't knowing the system.",
-      "Understanding why users care, how the system survives real-world usage, how architecture evolves... that requires knowing.",
-      "So while 80% of the code appeared instantly… the transition from believing to knowing was still ahead."
+      "Danny often described his workflow with pride: 'AI already writes 80% of the code.'",
+      "He was right. But that wasn't the expensive part.",
+      "The remaining 20% — domain logic, edge cases, real-world constraints — consumed 80% of the total engineering time.",
+      "AI made the cheap part cheaper. The expensive part stayed expensive."
     ],
-    imagePrompt: `Scene: A massive digital iceberg floating in a dark sea. The top 20% above the water is bright, clean code. The 80% below the water is a massive, complex, tangled mess of architecture and edge cases. Style: ${characterConfig.style}`,
-    imageAlt: "An iceberg - 20% code above water, 80% real system complexity below"
+    imagePrompt: `Scene: A massive digital iceberg floating in a dark sea. The top 20% above the water is bright, clean code labeled '80% generated fast'. The 80% below the water is a massive, complex, tangled mess of architecture and domain knowledge labeled '80% of the time'. Style: ${characterConfig.style}`,
+    imageAlt: "An iceberg: the small visible tip is generated code (80% generated fast), the vast hidden mass is domain knowledge and edge cases (the remaining 20% that takes 80% of the total time)"
   },
   {
     id: "slow-decay",
@@ -393,17 +393,17 @@ export const panels: ComicPanel[] = [
 ];
 
 // Populate comicPages after panels is defined so we can reference panels by index.
+// Only the first 4 uploaded PNG images are used here; their artwork clearly matches
+// the story beats they illustrate. Pages 5–8 had art that didn't fit their panels,
+// so those panels are left out of comicPages and rendered via the SVG strip fallback
+// in App.tsx (which shows any panel not already covered by a comicPage).
 (function populateComicPages() {
   const p = panels;
-  // 8 uploaded PNG images mapped to story narrative groups following the 8-beat arc:
-  // Page 1 (1773597875498): intro + new-engineer        - Beat 1+2: The Setup (crime + who Danny is)
-  // Page 2 (1773597878808): the-tools + cheap-part      - Beat 2+1: The Accelerant (AI tools + cheap code)
-  // Page 3 (1773597883925): pattern-mirrors + the-catch - Beat 1+3: The Pattern (LLM limits + first trouble)
-  // Page 4 (1773597887326): symptoms + workflow         - Beat 3+2: The Belief (problem surfaces + how Danny's trust caused this)
-  // Page 5 (1773597890190): happy-path + slow-decay     - Beat 4: The Decay (hidden constraints + context rot)
-  // Page 6 (1773597896129): first-clue                  - Beat 5/6: The First Clue (interactive investigation)
-  // Page 7 (1773597896891): missing-knowledge + quiet-witness + danny-kruger-effect  - Beat 6+7: The Investigation
-  // Page 8 (1773597898900): eighty-eighty + real-shift + closing-case                - Beat 7+8: The Truth
+  // 4 uploaded PNG images mapped to story narrative groups following the 8-beat arc:
+  // Page 1 (1773597875498): intro + new-engineer        - Beat 1+2: The Setup
+  // Page 2 (1773597878808): the-tools + cheap-part      - Beat 2+1: The Accelerant
+  // Page 3 (1773597883925): pattern-mirrors + the-catch - Beat 1+3: The Pattern
+  // Page 4 (1773597887326): symptoms + workflow         - Beat 3+2: The Belief
   const byId = Object.fromEntries(p.map(panel => [panel.id, panel]));
   comicPages.push(
     {
@@ -429,30 +429,6 @@ export const panels: ComicPanel[] = [
       imageAlt: 'Comic page 4 – The Belief: strange search results appear, and Danny\'s trust in generated code put them there',
       imageWidth: 1408, imageHeight: 768,
       panels: [byId['symptoms'], byId['workflow']],
-    },
-    {
-      id: 'comic-page-5',
-      imageAlt: 'Comic page 5 – The Decay: hidden constraints surface and context rot sets in',
-      imageWidth: 1408, imageHeight: 768,
-      panels: [byId['happy-path'], byId['slow-decay']],
-    },
-    {
-      id: 'comic-page-6',
-      imageAlt: 'Comic page 6 – The First Clue: investigate the cracked search index',
-      imageWidth: 1408, imageHeight: 768,
-      panels: [byId['first-clue']],
-    },
-    {
-      id: 'comic-page-7',
-      imageAlt: 'Comic page 7 – The Investigation: missing knowledge, verification tools, and the Danny Krüger effect',
-      imageWidth: 1408, imageHeight: 768,
-      panels: [byId['missing-knowledge'], byId['quiet-witness'], byId['danny-kruger-effect']],
-    },
-    {
-      id: 'comic-page-8',
-      imageAlt: 'Comic page 8 – The Truth: the real cost of believing over knowing, and how Danny learns to verify',
-      imageWidth: 1376, imageHeight: 768,
-      panels: [byId['eighty-eighty'], byId['real-shift'], byId['closing-case']],
     },
   );
 }());
