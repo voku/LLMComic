@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ComicPage, Hotspot } from '../data';
 import { getGeneratedImagePath } from '../generatedImages';
+import { ImageLightbox, ExpandButton } from './ImageLightbox';
 
 /**
  * Renders one uploaded comic-page PNG full-width in a single column.
@@ -14,6 +15,7 @@ import { getGeneratedImagePath } from '../generatedImages';
 export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumber: number }) {
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
   const [revealedCount, setRevealedCount] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   // Collect all hotspots from interactive panels on this page
   const hotspots: Hotspot[] = page.panels.flatMap(p => p.hotspots ?? []);
@@ -79,6 +81,9 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
             )}
           </div>
         </div>
+
+        {/* Expand / fullscreen button – visible only on hover / keyboard focus */}
+        {imagePath && <ExpandButton onExpand={() => setLightboxOpen(true)} />}
 
         {/* ── SVG scaling image map ──────────────────────────────────────
             viewBox="0 0 100 100" + preserveAspectRatio="none" maps the
@@ -237,6 +242,11 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
             </div>
           )}
         </div>
+      )}
+
+      {/* Full-screen lightbox */}
+      {lightboxOpen && imagePath && (
+        <ImageLightbox src={imagePath} alt={page.imageAlt} onClose={() => setLightboxOpen(false)} />
       )}
     </article>
   );
