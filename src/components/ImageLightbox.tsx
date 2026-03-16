@@ -55,27 +55,30 @@ export function ImageLightbox({
   return createPortal(
     /* Backdrop — click outside image to close */
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/95 p-2 md:p-8"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/95 p-3 sm:p-4 md:p-8"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label={`Full-screen view: ${alt}`}
     >
-      <div className="absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-3 md:inset-x-5 md:top-5">
+      <div className="absolute inset-x-2 top-2 z-10 flex items-start justify-between gap-2 sm:inset-x-3 sm:top-3 sm:gap-3 md:inset-x-5 md:top-5">
+        {onPrev ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPrev();
+            }}
+            className="flex h-11 min-w-11 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-3 font-[--font-comic-title] text-lg text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:h-10 md:min-w-10 md:text-base"
+            aria-label={prevLabel}
+          >
+            ‹
+          </button>
+        ) : (
+          <div />
+        )}
+
         <div className="flex gap-2">
-          {onPrev && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onPrev();
-              }}
-              className="flex h-10 min-w-10 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-3 font-[--font-comic-title] text-base text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-              aria-label={prevLabel}
-            >
-              ‹
-            </button>
-          )}
           {onNext && (
             <button
               type="button"
@@ -83,25 +86,25 @@ export function ImageLightbox({
                 e.stopPropagation();
                 onNext();
               }}
-              className="flex h-10 min-w-10 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-3 font-[--font-comic-title] text-base text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              className="flex h-11 min-w-11 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-3 font-[--font-comic-title] text-lg text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:h-10 md:min-w-10 md:text-base"
               aria-label={nextLabel}
             >
               ›
             </button>
           )}
-        </div>
 
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose();
-          }}
-          className="flex h-10 w-10 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] font-[--font-comic-title] text-xl text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-          aria-label="Close full-screen view"
-        >
-          ✕
-        </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="flex h-11 w-11 items-center justify-center border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] font-[--font-comic-title] text-xl text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] md:h-10 md:w-10"
+            aria-label="Close full-screen view"
+          >
+            ✕
+          </button>
+        </div>
       </div>
 
       {/* Full image — stop click from bubbling to backdrop */}
@@ -109,11 +112,11 @@ export function ImageLightbox({
         <img
           src={src}
           alt={alt}
-          className="max-h-[82vh] max-w-full border-[4px] border-zinc-950 object-contain shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]"
+          className="max-h-[calc(100vh-7.5rem)] max-w-full border-[4px] border-zinc-950 object-contain shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] sm:max-h-[82vh]"
           draggable={false}
         />
         {counterLabel && (
-          <p className="rounded-full border-[3px] border-zinc-950 bg-zinc-100 px-4 py-2 text-center font-[--font-comic] text-sm font-bold text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:text-base">
+          <p className="rounded-full border-[3px] border-zinc-950 bg-zinc-100 px-3 py-1.5 text-center font-[--font-comic] text-xs font-bold text-zinc-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:px-4 sm:py-2 sm:text-sm md:text-base">
             {counterLabel}
           </p>
         )}
@@ -124,8 +127,7 @@ export function ImageLightbox({
 }
 
 /**
- * Hover-only expand button placed in the top-right corner of a comic image.
- * Requires the parent container to carry the Tailwind `group` class.
+ * Fullscreen expand button placed in the top-right corner of a comic image.
  * Uses `e.stopPropagation()` so it never triggers the parent's click handler.
  */
 export function ExpandButton({ onExpand }: ExpandButtonProps) {
@@ -133,7 +135,7 @@ export function ExpandButton({ onExpand }: ExpandButtonProps) {
     <button
       type="button"
       onClick={(e) => { e.stopPropagation(); onExpand(); }}
-      className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center border-[3px] border-zinc-950 bg-zinc-950/80 text-white opacity-100 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] backdrop-blur-sm transition-opacity md:right-5 md:top-5 md:h-10 md:w-10 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
+      className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center border-[3px] border-zinc-950 bg-zinc-950/80 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] backdrop-blur-sm transition-transform hover:scale-105 active:scale-95 md:right-5 md:top-5 md:h-11 md:w-11"
       aria-label="View full screen"
     >
       <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true">

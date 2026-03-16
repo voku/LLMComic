@@ -57,7 +57,7 @@ export function ComicPanel({
         {panel.title && (
           <div className="absolute left-3 top-3 max-w-[calc(100%-1.5rem)] md:left-5 md:top-5 md:max-w-[min(88%,32rem)]">
             <div className="inline-block max-w-full border-[4px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-4 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-              <p className="mb-1 font-[--font-comic-title] text-[10px] tracking-[0.28em] text-red-600 md:text-xs">
+              <p className="mb-1 font-[--font-comic-title] text-xs tracking-[0.28em] text-red-600 md:text-sm">
                 SCENE {index + 1}
               </p>
               <h2 className="font-[--font-comic-title] text-xl leading-none tracking-wide text-zinc-950 md:text-3xl">
@@ -77,9 +77,9 @@ export function ComicPanel({
               {panel.textBlocks.slice(0, revealedCount).map((text, textIndex) => (
                 <div
                   key={textIndex}
-                  className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-4 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                  className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:px-4 sm:py-3"
                 >
-                  <p className="font-[--font-comic] text-sm font-bold leading-snug text-zinc-950 md:text-base">
+                  <p className="font-[--font-comic] text-xs font-bold leading-snug text-zinc-950 sm:text-sm md:text-base">
                     {text}
                   </p>
                 </div>
@@ -90,7 +90,7 @@ export function ComicPanel({
 
         {/* Bottom bar: progress dots (left) + tap-to-read hint (right) */}
         {hasText && (
-          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between md:inset-x-6 md:bottom-4">
+          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 md:inset-x-6 md:bottom-4">
             {/* Progress dots */}
             <div className="flex gap-1.5">
               {panel.textBlocks.map((_, i) => (
@@ -105,7 +105,7 @@ export function ComicPanel({
 
             {/* "Tap to read" hint */}
             {!allRevealed && (
-              <div className="flex items-center gap-1 rounded-full border-[2px] border-zinc-950 bg-zinc-950/70 px-3 py-1 text-white backdrop-blur-sm">
+              <div className="flex items-center gap-1 rounded-full border-[2px] border-zinc-950 bg-zinc-950/70 px-2.5 py-1 text-white backdrop-blur-sm sm:px-3">
                 <span className="font-[--font-comic] text-xs font-bold">tap to read</span>
               </div>
             )}

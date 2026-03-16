@@ -57,7 +57,7 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
                 top: `${hotspot.y + hotspot.height / 2}%`,
               }}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-red-600 font-[--font-comic-title] text-lg text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] md:h-12 md:w-12 md:text-xl">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-red-600 font-[--font-comic-title] text-base text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] sm:h-10 sm:w-10 sm:text-lg md:h-12 md:w-12 md:text-xl">
                 {index + 1}
               </div>
             </div>
@@ -70,9 +70,9 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
                 {panel.textBlocks.slice(0, revealedCount).map((text, index) => (
                   <div
                     key={index}
-                    className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-4 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                    className="rounded-sm border-[3px] border-zinc-950 bg-[linear-gradient(180deg,#fffdf3_0%,#f8ecd0_100%)] px-3 py-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:px-4 sm:py-3"
                   >
-                    <p className="font-[--font-comic] text-base font-bold leading-relaxed text-zinc-950 md:text-lg">
+                    <p className="font-[--font-comic] text-sm font-bold leading-relaxed text-zinc-950 sm:text-base md:text-lg">
                       {text}
                     </p>
                   </div>
@@ -83,7 +83,7 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
 
           {/* Bottom bar: progress dots + tap-to-read hint */}
           {hasText && (
-            <div className="absolute inset-x-3 bottom-3 flex items-center justify-between md:inset-x-6 md:bottom-4">
+            <div className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 md:inset-x-6 md:bottom-4">
               <div className="flex gap-1.5">
                 {panel.textBlocks.map((_, i) => (
                   <div
@@ -96,7 +96,7 @@ export function PointAndClickScene({ panel }: { panel: ComicPanel }) {
               </div>
 
               {!allRevealed && (
-                <div className="flex items-center gap-1 rounded-full border-[2px] border-zinc-950 bg-zinc-950/70 px-3 py-1 text-white backdrop-blur-sm">
+                <div className="flex items-center gap-1 rounded-full border-[2px] border-zinc-950 bg-zinc-950/70 px-2.5 py-1 text-white backdrop-blur-sm sm:px-3">
                   <span className="font-[--font-comic] text-xs font-bold">tap to read</span>
                 </div>
               )}
