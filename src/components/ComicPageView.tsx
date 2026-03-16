@@ -42,7 +42,7 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
     <article className="overflow-hidden rounded-sm border-[4px] border-zinc-950 bg-zinc-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
       {/* ── Image + scaling image map overlay ─────────────────────────── */}
       <div
-        className={`relative w-full${hasText && !allRevealed ? ' cursor-pointer select-none' : ''}`}
+        className={`group relative w-full${hasText && !allRevealed ? ' cursor-pointer select-none' : ''}`}
         style={aspectStyle}
         onClick={handleImageClick}
         role={hasText && !allRevealed ? 'button' : undefined}
@@ -66,8 +66,8 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
         {/* Dark gradient so text and markers stay readable */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),_transparent_35%),linear-gradient(to_top,_rgba(9,9,11,0.85),_rgba(9,9,11,0.06)_50%,_rgba(9,9,11,0.40))]" />
 
-        {/* Page badge */}
-        <div className="absolute left-3 top-3 md:left-5 md:top-5">
+        {/* Page badge – visible only on hover / keyboard focus */}
+        <div className="absolute left-3 top-3 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 md:left-5 md:top-5">
           <div className="inline-block border-[4px] border-zinc-950 bg-[linear-gradient(180deg,#fff7d6_0%,#f4e3b3_100%)] px-3 py-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] md:px-5 md:py-3">
             <p className="font-[--font-comic-title] text-[10px] tracking-[0.28em] text-red-600 md:text-xs">
               PAGE {pageNumber}
@@ -86,7 +86,7 @@ export function ComicPageView({ page, pageNumber }: { page: ComicPage; pageNumbe
             so every <rect> and marker scales with the rendered image size. */}
         {hasInteractive && (
           <svg
-            className="absolute inset-0 h-full w-full"
+            className="absolute inset-0 h-full w-full opacity-0 pointer-events-none transition-opacity group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
             aria-label="Interactive hotspot map"
