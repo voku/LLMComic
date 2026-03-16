@@ -36,8 +36,12 @@ function buildSections(allPanels: ComicPanelType[]): Section[] {
 }
 
 export default function App() {
-  const useComicPages = comicPages.length > 0;
-  const sections = useComicPages ? [] : buildSections(panels);
+  // Panels already shown via a PNG-backed comicPage — these must not be duplicated
+  // in the strip layout below.
+  const panelsInComicPages = new Set(comicPages.flatMap(p => p.panels.map(panel => panel.id)));
+  // Remaining panels (those without a matching comicPage) rendered as SVG strips/scenes.
+  const remainingPanels = panels.filter(panel => !panelsInComicPages.has(panel.id));
+  const sections = buildSections(remainingPanels);
   let panelCount = 0;
 
   return (
@@ -75,26 +79,26 @@ export default function App() {
       </header>
 
       <main className="relative z-10 py-6 md:py-8">
-        {useComicPages ? (
-          /* Single-column comic pages backed by uploaded PNG artwork */
+        {/* PNG-backed pages — only rendered when matching artwork exists */}
+        {comicPages.length > 0 && (
           <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 md:gap-8 md:px-6">
             {comicPages.map((page, i) => (
               <ComicPageView key={page.id} page={page} pageNumber={i + 1} />
             ))}
           </div>
-        ) : (
-          /* Fallback: multi-column strip layout (used when no PNG pages exist) */
-          sections.map((section) => {
-            if (section.type === 'interactive') {
-              return <PointAndClickScene key={section.panel.id} panel={section.panel} />;
-            }
-
-            const start = panelCount;
-            panelCount += section.panels.length;
-            const stripKey = section.panels[0]?.id ?? `strip-${start}`;
-            return <ComicStrip key={stripKey} panels={section.panels} startIndex={start} />;
-          })
         )}
+
+        {/* Remaining panels (no matching PNG) rendered as SVG strips / interactive scenes */}
+        {sections.map((section) => {
+          if (section.type === 'interactive') {
+            return <PointAndClickScene key={section.panel.id} panel={section.panel} />;
+          }
+
+          const start = panelCount;
+          panelCount += section.panels.length;
+          const stripKey = section.panels[0]?.id ?? `strip-${start}`;
+          return <ComicStrip key={stripKey} panels={section.panels} startIndex={start} />;
+        })}
       </main>
 
       <footer className="relative z-10 border-t-4 border-zinc-900 bg-zinc-950 py-16 text-center">

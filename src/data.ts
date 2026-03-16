@@ -215,13 +215,13 @@ export const panels: ComicPanel[] = [
     type: "comic",
     title: "The 80/80 effect",
     textBlocks: [
-      "Danny often described his workflow with pride: “AI already writes most of the code.”",
-      "But writing syntax isn't knowing the system.",
-      "Understanding why users care, how the system survives real-world usage, how architecture evolves... that requires knowing.",
-      "So while 80% of the code appeared instantly… the transition from believing to knowing was still ahead."
+      "Danny often described his workflow with pride: 'AI already writes 80% of the code.'",
+      "He was right. But that wasn't the expensive part.",
+      "The remaining 20% — domain logic, edge cases, real-world constraints — consumed 80% of the total engineering time.",
+      "AI made the cheap part cheaper. The expensive part stayed expensive."
     ],
-    imagePrompt: `Scene: A massive digital iceberg floating in a dark sea. The top 20% above the water is bright, clean code. The 80% below the water is a massive, complex, tangled mess of architecture and edge cases. Style: ${characterConfig.style}`,
-    imageAlt: "An iceberg - 80% code above water, 80% real work below"
+    imagePrompt: `Scene: A massive digital iceberg floating in a dark sea. The top 20% above the water is bright, clean code labeled '80% generated fast'. The 80% below the water is a massive, complex, tangled mess of architecture and domain knowledge labeled '80% of the time'. Style: ${characterConfig.style}`,
+    imageAlt: "An iceberg: the small visible tip is generated code (80% generated fast), the vast hidden mass is domain knowledge and edge cases (the remaining 20% that takes 80% of the total time)"
   },
   {
     id: "slow-decay",
@@ -290,12 +290,32 @@ export const panels: ComicPanel[] = [
     hotspots: [
       {
         id: "static-analysis",
-        x: 30, y: 20, width: 40, height: 60,
+        x: 15, y: 10, width: 35, height: 40,
         label: "Static Analysis Tool",
         interactions: {
           Inspect: "Static analysis does not trust appearances. It does not care whether code looks professional.",
           Analyze: "The tools began raising small warnings. Type mismatches. Unexpected nullability. Inconsistent data structures.",
           Interrogate: "It checks constraints. And constraints are where systems reveal the truth."
+        }
+      },
+      {
+        id: "type-system",
+        x: 55, y: 15, width: 35, height: 35,
+        label: "Type System",
+        interactions: {
+          Inspect: "The type system records every promise a developer made about the shape of data.",
+          Analyze: "These types were generated to match the happy path. They didn't account for nullable fields the real data source actually produced.",
+          Interrogate: "When did the type mismatch start? ... 'From the beginning. The model assumed the clean version.'"
+        }
+      },
+      {
+        id: "dependency-graph",
+        x: 25, y: 60, width: 50, height: 30,
+        label: "Dependency Graph",
+        interactions: {
+          Inspect: "The import graph reveals which modules the search system actually depended on.",
+          Analyze: "Several core modules pulled in infrastructure clients that didn't exist in staging. The generated code assumed a production environment it had never seen.",
+          Interrogate: "Why does this compile locally but fail in staging? ... 'Because the model generated plausible imports. No one verified where they led.'"
         }
       }
     ]
@@ -345,19 +365,6 @@ export const panels: ComicPanel[] = [
     ]
   },
   {
-    id: "reality-arrives",
-    type: "comic",
-    title: "When reality arrives",
-    textBlocks: [
-      "Even if the software works technically, another set of problems appears.",
-      "Someone still needs to explain why the tool exists, convince others it solves a real problem, distribute it, support it.",
-      "The messy human systems surrounding software.",
-      "AI can generate the application. It cannot generate the ecosystem around it."
-    ],
-    imagePrompt: `Scene: A shiny, brand new robot standing alone in the middle of a bustling, messy, human marketplace. People are walking past it, ignoring it completely. Style: ${characterConfig.style}`,
-    imageAlt: "A shiny robot standing alone in an empty marketplace"
-  },
-  {
     id: "real-shift",
     type: "comic",
     title: "The real shift",
@@ -386,66 +393,42 @@ export const panels: ComicPanel[] = [
 ];
 
 // Populate comicPages after panels is defined so we can reference panels by index.
+// Only the first 4 uploaded PNG images are used here; their artwork clearly matches
+// the story beats they illustrate. Pages 5–8 had art that didn't fit their panels,
+// so those panels are left out of comicPages and rendered via the SVG strip fallback
+// in App.tsx (which shows any panel not already covered by a comicPage).
 (function populateComicPages() {
   const p = panels;
-  // 8 uploaded PNG images mapped to story narrative groups:
-  // Page 1 (1773597875498): intro + symptoms              - "The Crime"
-  // Page 2 (1773597878808): new-engineer + the-tools      - "The Engineer"
-  // Page 3 (1773597883925): cheap-part + the-catch        - "The Cheap Part"
-  // Page 4 (1773597887326): first-clue                    - "The First Clue" (interactive)
-  // Page 5 (1773597890190): workflow + pattern-mirrors    - "The Pattern"
-  // Page 6 (1773597896129): happy-path + eighty-eighty + slow-decay  - "The Decay"
-  // Page 7 (1773597896891): missing-knowledge + quiet-witness + danny-kruger-effect  - "The Investigation"
-  // Page 8 (1773597898900): reality-arrives + real-shift + closing-case  - "The Truth"
+  // 4 uploaded PNG images mapped to story narrative groups following the 8-beat arc:
+  // Page 1 (1773597875498): intro + new-engineer        - Beat 1+2: The Setup
+  // Page 2 (1773597878808): the-tools + cheap-part      - Beat 2+1: The Accelerant
+  // Page 3 (1773597883925): pattern-mirrors + the-catch - Beat 1+3: The Pattern
+  // Page 4 (1773597887326): symptoms + workflow         - Beat 3+2: The Belief
   const byId = Object.fromEntries(p.map(panel => [panel.id, panel]));
   comicPages.push(
     {
       id: 'comic-page-1',
-      imageAlt: 'Comic page 1 – The Crime: a corrupted system and strange search results',
+      imageAlt: 'Comic page 1 – The Setup: a crime in the age of AI and the engineer who caused it',
       imageWidth: 1408, imageHeight: 768,
-      panels: [byId['intro'], byId['symptoms']],
+      panels: [byId['intro'], byId['new-engineer']],
     },
     {
       id: 'comic-page-2',
-      imageAlt: 'Comic page 2 – The Engineer: Danny ships entire modules with AI assistance',
+      imageAlt: 'Comic page 2 – The Accelerant: Danny\'s AI tools and why coding suddenly became cheap',
       imageWidth: 1408, imageHeight: 768,
-      panels: [byId['new-engineer'], byId['the-tools']],
+      panels: [byId['the-tools'], byId['cheap-part']],
     },
     {
       id: 'comic-page-3',
-      imageAlt: 'Comic page 3 – The Cheap Part: coding becomes cheap but remarkable software stays rare',
+      imageAlt: 'Comic page 3 – The Pattern: LLMs recombine patterns, not designs — and the first sign something is wrong',
       imageWidth: 1408, imageHeight: 768,
-      panels: [byId['cheap-part'], byId['the-catch']],
+      panels: [byId['pattern-mirrors'], byId['the-catch']],
     },
     {
       id: 'comic-page-4',
-      imageAlt: 'Comic page 4 – The First Clue: investigate the cracked search index',
+      imageAlt: 'Comic page 4 – The Belief: strange search results appear, and Danny\'s trust in generated code put them there',
       imageWidth: 1408, imageHeight: 768,
-      panels: [byId['first-clue']],
-    },
-    {
-      id: 'comic-page-5',
-      imageAlt: 'Comic page 5 – The Pattern: LLMs mirror existing patterns, not your architecture',
-      imageWidth: 1408, imageHeight: 768,
-      panels: [byId['workflow'], byId['pattern-mirrors']],
-    },
-    {
-      id: 'comic-page-6',
-      imageAlt: 'Comic page 6 – The Decay: happy path, 80/80 effect, and context rot',
-      imageWidth: 1408, imageHeight: 768,
-      panels: [byId['happy-path'], byId['eighty-eighty'], byId['slow-decay']],
-    },
-    {
-      id: 'comic-page-7',
-      imageAlt: 'Comic page 7 – The Investigation: missing knowledge, quiet witness, Danny Krüger effect',
-      imageWidth: 1408, imageHeight: 768,
-      panels: [byId['missing-knowledge'], byId['quiet-witness'], byId['danny-kruger-effect']],
-    },
-    {
-      id: 'comic-page-8',
-      imageAlt: 'Comic page 8 – The Truth: reality arrives, the real shift, closing the case',
-      imageWidth: 1376, imageHeight: 768,
-      panels: [byId['reality-arrives'], byId['real-shift'], byId['closing-case']],
+      panels: [byId['symptoms'], byId['workflow']],
     },
   );
 }());
