@@ -119,11 +119,11 @@ export function ComicPanel({
           src={activeImagePath}
           alt={activeLightboxPanel.imageAlt}
           onClose={() => setLightboxIndex(null)}
-          onPrev={lightboxIndex && lightboxIndex > 0 ? () => setLightboxIndex(lightboxIndex - 1) : undefined}
+          onPrev={lightboxIndex !== null && lightboxIndex > 0 ? () => setLightboxIndex(lightboxIndex - 1) : undefined}
           onNext={lightboxIndex !== null && lightboxIndex < lightboxPanels.length - 1 ? () => setLightboxIndex(lightboxIndex + 1) : undefined}
           prevLabel="View previous panel"
           nextLabel="View next panel"
-          counterLabel={`Panel ${lightboxIndex + 1} of ${lightboxPanels.length}`}
+          counterLabel={lightboxIndex !== null ? `Panel ${lightboxIndex + 1} of ${lightboxPanels.length}` : undefined}
         />
       )}
     </article>

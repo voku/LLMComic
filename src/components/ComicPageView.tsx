@@ -264,11 +264,11 @@ export function ComicPageView({
           src={activeLightboxPath}
           alt={activeLightboxPage.imageAlt}
           onClose={() => setLightboxIndex(null)}
-          onPrev={lightboxIndex && lightboxIndex > 0 ? () => setLightboxIndex(lightboxIndex - 1) : undefined}
+          onPrev={lightboxIndex !== null && lightboxIndex > 0 ? () => setLightboxIndex(lightboxIndex - 1) : undefined}
           onNext={lightboxIndex !== null && lightboxIndex < pages.length - 1 ? () => setLightboxIndex(lightboxIndex + 1) : undefined}
           prevLabel="View previous page"
           nextLabel="View next page"
-          counterLabel={`Page ${lightboxIndex + 1} of ${pages.length}`}
+          counterLabel={lightboxIndex !== null ? `Page ${lightboxIndex + 1} of ${pages.length}` : undefined}
         />
       )}
     </article>

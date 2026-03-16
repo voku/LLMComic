@@ -88,7 +88,8 @@ export default function App() {
                 CONFIDENCE VS. UNDERSTANDING
               </p>
               <div className="mt-4 rounded-sm border-[3px] border-zinc-950 bg-white p-3">
-                <svg viewBox="0 0 240 140" className="h-auto w-full" role="img" aria-label="A stylized confidence versus understanding diagram">
+                <svg viewBox="0 0 240 140" className="h-auto w-full" role="img" aria-labelledby="confidence-diagram-title">
+                  <title id="confidence-diagram-title">Confidence versus understanding diagram</title>
                   <line x1="26" y1="12" x2="26" y2="116" stroke="#18181b" strokeWidth="3" />
                   <line x1="26" y1="116" x2="224" y2="116" stroke="#18181b" strokeWidth="3" />
                   <path d="M26 110 C48 38, 84 18, 110 34 S150 98, 224 70" fill="none" stroke="#dc2626" strokeWidth="6" strokeLinecap="round" />
@@ -103,7 +104,7 @@ export default function App() {
                 </svg>
               </div>
               <p className="mt-3 font-[--font-comic] text-sm font-bold leading-relaxed md:text-base">
-                The popular meme version is only a shorthand, but the feeling is familiar: confidence can surge long before real understanding arrives.
+                The popular meme version is just a shorthand, but the feeling is familiar: confidence can surge long before real understanding arrives.
               </p>
             </section>
           </div>
