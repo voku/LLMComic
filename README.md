@@ -1,7 +1,3 @@
-<div align="center">
-  <img width="1200" height="475" alt="LLMComic banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
 # LLMComic
 
 An interactive noir comic about AI-assisted software development, built with React, TypeScript, Vite, Tailwind CSS, and a small Express server that serves the shipped comic-image manifest in development.
