@@ -323,11 +323,11 @@ export const panels: ComicPanel[] = [
   {
     id: "danny-kruger-effect",
     type: "interactive",
-    title: "The Danny Krüger Effect",
+    title: "The Dunning-Kruger Effect",
     textBlocks: [
-      "The Dunning-Kruger effect is when you lack the competence to know you're wrong.",
-      "The Danny Krüger effect is different: The AI generates code so plausible, you substitute believing for knowing.",
-      "Investigate the illusion."
+      "The Dunning-Kruger effect refers to a cognitive bias in self-perception. People with low competence in a domain may overestimate their own knowledge or skill.",
+      "It stems from weak metacognition: the same gap that causes mistakes also makes accurate self-assessment harder. The term comes from David Dunning and Justin Kruger's 1999 paper.",
+      "This case is related, but not identical. AI output can look so plausible that belief replaces verification."
     ],
     imagePrompt: `Scene: A perfectly painted, realistic facade of a modern house. Behind the facade, it is held up by flimsy, splintering wooden props. ${characterConfig.name} is standing in front of it, looking fooled. Style: ${characterConfig.style}`,
     imageAlt: "A perfectly painted facade of a house supported by flimsy wooden props",

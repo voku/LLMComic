@@ -42,7 +42,7 @@
 
   <g filter="url(#shadow)">
     <rect x="120" y="96" width="520" height="114" rx="14" fill="#a21caf" />
-    <text x="160" y="168" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="800" letter-spacing="2">THE DANNY KRÜGER EFFECT</text>
+    <text x="160" y="168" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="800" letter-spacing="2">THE DUNNING-KRUGER EFFECT</text>
   </g>
 
   <text x="180" y="282" fill="#f4f4f5" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" letter-spacing="8">INTERACTIVE SCENE</text>
@@ -50,7 +50,7 @@
 
   <g filter="url(#shadow)">
     <rect x="140" y="560" width="820" height="182" rx="18" fill="#fef3c7" />
-    <text x="180" y="624" fill="#111827" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700"><tspan x="180" dy="0">The Dunning-Kruger effect is when you lack</tspan><tspan x="180" dy="42">the competence to know you&apos;re wrong. The</tspan><tspan x="180" dy="42">Danny Krüger effect is different: The AI</tspan></text>
+    <text x="180" y="624" fill="#111827" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700"><tspan x="180" dy="0">The Dunning-Kruger effect is a cognitive</tspan><tspan x="180" dy="42">bias where low competence distorts self-</tspan><tspan x="180" dy="42">assessment. This case is related, not identical.</tspan></text>
   </g>
 
   <text x="140" y="840" fill="#fca5a5" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="6">NOIR / SYSTEMS / INVESTIGATION</text>
